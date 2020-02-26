@@ -4,11 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WanderState : ChuckBaseState
+public class ThrownState : ChuckBaseState
 {
     private Chuck thisChuck;
 
-    public WanderState(Chuck thisChuck)
+    public ThrownState(Chuck thisChuck)
     {
         this.thisChuck = thisChuck;
     }
@@ -25,14 +25,18 @@ public class WanderState : ChuckBaseState
 
     public override Type StateUpdate()
     {
-        if (!thisChuck.BeenPickedUp())
+        if (thisChuck.IsThrown())
         {
-            thisChuck.Wandering();
+            thisChuck.IsThrown();
             return null;
+        }
+        else if (thisChuck.BeenPickedUp())
+        {
+            return typeof(PickedUpState);
         }
         else
         {
-            return typeof(PickedUpState);
+            return typeof(WanderState);
         }
     }
 }

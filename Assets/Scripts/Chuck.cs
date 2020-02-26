@@ -6,22 +6,36 @@ using Random = UnityEngine.Random;
 
 public class Chuck : MonoBehaviour
 {
-    public Rigidbody chuckRB;
+    private Rigidbody chuckRB;
     public float chuckSpeed;
 
-    public Vector2 randomDir;
     public float timeToChangeDir;
-    public float timePassed;
-    public bool atMapLimit;
+    [SerializeField]
+       private Vector2 randomDir;
+    [SerializeField]
+       private float wanderTimePassed;
+    [SerializeField]
+       private bool atMapLimit;
+
+    [SerializeField]
+        private bool isBeingHeld = false;
+    public float thrownTime;
+    [SerializeField]
+        private float thrownTimer;
+    Vector3 preThrownTouchPos;
+    Vector3 postThrownTouchPos;
 
     private void Awake()
     {
         InitializeStateMachine();
 
-        timePassed = 0;
-        atMapLimit = false;
+        chuckRB = GetComponent<Rigidbody>();
 
         randomDir = UnityEngine.Random.insideUnitCircle;
+        wanderTimePassed = 0;
+        atMapLimit = false;
+
+        thrownTimer = 0;
     }
 
     private void InitializeStateMachine()
@@ -29,28 +43,30 @@ public class Chuck : MonoBehaviour
         Dictionary<Type, ChuckBaseState> states = new Dictionary<Type, ChuckBaseState>();
 
         states.Add(typeof(WanderState), new WanderState(this));
+        states.Add(typeof(PickedUpState), new PickedUpState(this));
+        states.Add(typeof(ThrownState), new ThrownState(this));
 
         GetComponent<ChuckStateMachine>().SetStates(states);
     }
 
     public void Wandering()
     {
-        if (timePassed >= timeToChangeDir)
+        if (wanderTimePassed >= timeToChangeDir)
         {
             randomDir = UnityEngine.Random.insideUnitCircle;
-            timePassed = 0.0f;
+            wanderTimePassed = 0.0f;
         }
         else
         {
             if (!atMapLimit)
             {
                 chuckRB.AddForce(randomDir.x * chuckSpeed, 0.0f, randomDir.y * chuckSpeed, ForceMode.Force);
-                timePassed += Time.deltaTime;
+                wanderTimePassed += Time.deltaTime;
             }
             else
             {
                 chuckRB.AddForce(-randomDir.x * chuckSpeed, 0.0f, -randomDir.y * chuckSpeed, ForceMode.Impulse);
-                timePassed = timeToChangeDir;
+                wanderTimePassed = timeToChangeDir;
             }
         }
     }
@@ -68,6 +84,57 @@ public class Chuck : MonoBehaviour
         if (collider.gameObject.tag == "Map Limit")
         {
             atMapLimit = false;
+        }
+    }
+
+    public void PickedUp()
+    {
+        chuckRB.velocity = Vector3.zero;
+
+        Vector3 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        touchPos.y = 3.0f;
+
+        chuckRB.AddForce((touchPos - transform.position) * 800.0f);
+    }
+
+    public bool BeenPickedUp()
+    {
+        Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        Debug.Log(mouse);
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            RaycastHit touching;
+            Ray touchPos = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(touchPos, out touching))
+            {
+                if (touching.collider.gameObject.tag == "Chuck")
+                {
+                    isBeingHeld = true;
+                }
+            }
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            isBeingHeld = false;
+        }
+
+        return isBeingHeld;
+    }
+
+    public bool IsThrown()
+    {
+        if (thrownTimer < thrownTime)
+        {
+            thrownTimer += Time.deltaTime;
+            return true;
+        }
+        else
+        {
+            thrownTimer = 0;
+            return false;
         }
     }
 }
