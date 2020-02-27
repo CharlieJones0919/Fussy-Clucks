@@ -25,7 +25,7 @@ public class ThrownState : ChuckBaseState
 
     public override Type StateUpdate()
     {
-        if (thisChuck.IsThrown())
+        if (thisChuck.IsThrown() && !thisChuck.BeenPickedUp())
         {
             thisChuck.IsThrown();
             return null;

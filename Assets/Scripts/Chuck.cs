@@ -22,8 +22,6 @@ public class Chuck : MonoBehaviour
     public float thrownTime;
     [SerializeField]
         private float thrownTimer;
-    Vector3 preThrownTouchPos;
-    Vector3 postThrownTouchPos;
 
     private void Awake()
     {
@@ -90,19 +88,14 @@ public class Chuck : MonoBehaviour
     public void PickedUp()
     {
         chuckRB.velocity = Vector3.zero;
-
         Vector3 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        touchPos.y = 3.0f;
+        touchPos.y = 2.0f;
 
-        chuckRB.AddForce((touchPos - transform.position) * 800.0f);
+        chuckRB.AddForce((touchPos - transform.position) * 200.0f);
     }
 
     public bool BeenPickedUp()
     {
-        Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        Debug.Log(mouse);
-
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit touching;
