@@ -1,0 +1,22 @@
+Commit 1 [23/02/20]:
+- Models for Chicky, Roosir and Hutch with lambert materials.
+- Scene set up with default realtime lighting.
+- Finite state machine started.
+
+Commit 2 [26/02/20]:
+- Implemented wandering state.
+- Added Pick Up and Throw functionality and states.
+
+Commit 3 [27/02/20]:
+- Lambert hutch model added with colliders.
+- Ammended Pick Up function with transition between states included.
+
+Commit 4 [01/03/20]:
+- Models changed to blinn materials for more reflection in lighting.
+- Added fence model.
+- Fixed fence collision pushback to remove unnnecessary boolean and 
+	knockback away from the fence.
+- Started implementing baked lighting for static objects with 
+	attempted lighting probes.
+- Annotated current Chuck.cs script.
+- Added "Commit Details" file log.
