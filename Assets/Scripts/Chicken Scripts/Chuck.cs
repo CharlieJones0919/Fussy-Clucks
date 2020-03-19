@@ -6,28 +6,27 @@ using Random = UnityEngine.Random;  //Specifiying that the "Random" function cal
 
 public class Chuck : MonoBehaviour
 {
-    private Rigidbody chuckRB; //Chicken's rigidbody.
-    public float chuckSpeed; //Wandering speed.
-    [SerializeField]
-        private Vector3 maxChuckVel; //Maximum velocity.
+    private GameObject chickyControllerObject;
+    private bool justActivated = false;
 
-    public float timeToChangeDir; //Number of seconds before chicken changes direction when wandering.
-    [SerializeField]
-       private Vector2 randomDir; //The random direction on the X and Z axis that the chicken wanders.
-    [SerializeField]
-       private float wanderTimePassed; //Amount of time the chicken has spent wandering since the last direction change.
-    [SerializeField]
-       private float fenceKnockback; //Force the chicken is knocked back from the fence.
+    public struct UniqueChickenProps
+    {
+         public string name;
+         public string breed;
+         public uint age;
+         public uint temp;
+         public uint hunger;
 
-    [SerializeField]
-        private bool isBeingHeld = false; //Has chicken been clicked/touched. (Global so it can remain true until touch ends).
-    public float thrownTime; //Seconds which should pass after the player unclicks or stops touching the chicken. 
-    [SerializeField]
-        private float thrownTimer; //How long has passed in seconds since the player stopped touching the chicken.
-    [SerializeField]
-        private float pickUpHeight; //Position of the chicken on the Y-axis when picked up.
-    [SerializeField]
-        private float fingerFollowSpeed; //Speed at which the chicken is moved by force towards the touch position.
+         public Vector2 randomDir;       //The random direction on the X and Z axis that the chicken wanders.
+         public float wanderTimer;  //Amount of time the chicken has spent wandering since the last direction change.
+         public float thrownTimer;              //How long has passed in seconds since the player stopped touching the chicken.
+         public bool isBeingHeld;        //Has chicken been clicked/touched. (Global so it can remain true until touch ends).
+    };
+
+    private ChickyPropertiesController.BaseProperties chickyConst;
+    private UniqueChickenProps chickyVar;
+    private GameObject chickyModel;
+    private Rigidbody rigidBody;      //Chicken's rigidbody.
 
     //Ran before runtime to initialise variables and to initialise the chicken's FSM.
     private void Awake()
@@ -50,47 +49,61 @@ public class Chuck : MonoBehaviour
     //Ran when the object this script is attached to is first activated.
     public void Start()
     {
-        chuckRB = GetComponent<Rigidbody>(); //Gets the rigidbody from the object this script is attached to.
-        maxChuckVel = new Vector3(chuckSpeed, 2.0f, chuckSpeed);
+        rigidBody = GetComponent<Rigidbody>(); //Gets the rigidbody from the object this script is attached to.  
 
-        randomDir = UnityEngine.Random.insideUnitCircle; //Sets the Vector2 its initial 2 random floats between -1 and 1.
-        //Following just initialise the chicken's variables.
-        wanderTimePassed = 0;
-        fenceKnockback = 5.0f;
+        Initialise();
+        chickyControllerObject = GameObject.Find("ChickyVariablesController");
+        chickyConst = chickyControllerObject.GetComponent<ChickyPropertiesController>().GetBaseProperties();
+    }
 
-        thrownTimer = 0;
-        pickUpHeight = 2.0f;
-        fingerFollowSpeed = 200.0f;
+    public bool HasJustBeenCreated()
+    {
+        justActivated = !justActivated;
+        return justActivated;
+    }
+
+    public void SetChickyParams(string name, string breed)
+    {
+        chickyVar.name = name;
+        chickyVar.age = 0;
+        chickyVar.temp = 20;
+        chickyVar.hunger = 100;
+    }
+
+    public void Initialise()
+    {
+        chickyVar.randomDir = UnityEngine.Random.insideUnitCircle; //Sets the Vector2 its initial 2 random floats between -1 and 1.
+        chickyVar.wanderTimer = 0;
+        chickyVar.thrownTimer = 0;
+        chickyVar.isBeingHeld = false;
+    }
+
+    public void SetBreed(string breed, GameObject model)
+    {
+        chickyVar.breed = breed;
+        chickyModel = model;
     }
 
     //Function called on update during the WanderState.
     public void Wandering()
     {
         //If the chicken's velocity exceeds its dimension's maximum velocity, decrease it.
-        if (chuckRB.velocity.x >= maxChuckVel.x)
+        if (rigidBody.velocity.magnitude > chickyConst.maxVel)
         {
-            chuckRB.velocity.Set(chuckRB.velocity.x - (chuckSpeed * Time.deltaTime), chuckRB.velocity.y, chuckRB.velocity.z);
-        }
-        if (chuckRB.velocity.y >= maxChuckVel.y)
-        {
-            chuckRB.velocity.Set(chuckRB.velocity.x, chuckRB.velocity.y - (chuckSpeed * Time.deltaTime), chuckRB.velocity.z);
-        }
-        if (chuckRB.velocity.z >= maxChuckVel.z)
-        {
-            chuckRB.velocity.Set(chuckRB.velocity.x, chuckRB.velocity.y, chuckRB.velocity.z - (chuckSpeed * Time.deltaTime));
+            rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, chickyConst.maxVel);
         }
 
         //If the time the chicken has spent wandering since last changing direction is more than or equal to the time the 
         //chicken should spend spend wandering in one direction, set the random direction to a new Vector2 and reset the wander time.
-        if (wanderTimePassed >= timeToChangeDir)
+        if (chickyVar.wanderTimer >= chickyConst.wanderTimeLimit)
         {
-            randomDir = UnityEngine.Random.insideUnitCircle;
-            wanderTimePassed = 0.0f;
+            chickyVar.randomDir = UnityEngine.Random.insideUnitCircle;
+            chickyVar.wanderTimer = 0.0f;
         }
 
         //Move the chicken's rigidbody in the direction of the current random direction and increase the wander time passed variable.
-        chuckRB.AddForce(randomDir.x * chuckSpeed, 0.0f, randomDir.y * chuckSpeed, ForceMode.Force);
-        wanderTimePassed += Time.deltaTime;
+        rigidBody.AddForce(chickyVar.randomDir.x * chickyConst.speed, 0.0f, chickyVar.randomDir.y * chickyConst.speed, ForceMode.Force);
+        chickyVar.wanderTimer += Time.deltaTime;
     }
 
     //Called when the object's collider touches a different collider.
@@ -102,8 +115,8 @@ public class Chuck : MonoBehaviour
             pushDir = -pushDir.normalized; //Invert and normalise the direction.
 
             //If the chicken is at the map limit, add an impulse force to it in the opposite direction then change the random direction.
-            chuckRB.AddForce(pushDir.x * fenceKnockback, 0.0f, pushDir.y * fenceKnockback, ForceMode.Impulse);
-            wanderTimePassed = timeToChangeDir;
+            rigidBody.AddForce(pushDir.x * chickyConst.fenceKnockback, 0.0f, pushDir.y * chickyConst.fenceKnockback, ForceMode.Impulse);
+            chickyVar.wanderTimer = chickyConst.wanderTimeLimit;
         }
     }
 
@@ -111,12 +124,12 @@ public class Chuck : MonoBehaviour
     //Moves the chicken towards the position of the player's finger on the screen.
     public void PickedUp()
     {
-        chuckRB.velocity = Vector3.zero; //Sets the chicken's velocity back to 0 so the only movement is the force towards the finger.
+        rigidBody.velocity = Vector3.zero; //Sets the chicken's velocity back to 0 so the only movement is the force towards the finger.
         Vector3 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Gets the position of the mouse/finger on the screen as a world co-ordinate.
-        touchPos.y = pickUpHeight; //Redefines the y-axis of the touch position as the screen hasn't got a depth.
+        touchPos.y = chickyConst.pickUpHeight; //Redefines the y-axis of the touch position as the screen hasn't got a depth.
 
-        chuckRB.AddForce((touchPos - transform.position) * fingerFollowSpeed); //Adds force to the chicken in the direction of the finger/mouse. 
-                                                                               //(The difference between the touch position and its current position).
+        rigidBody.AddForce((touchPos - transform.position) * chickyConst.fingerFollowSpeed); //Adds force to the chicken in the direction of the finger/mouse. 
+                                                                                             //(The difference between the touch position and its current position).
     }
 
     //Called every update while the chicken is in its PickedUpState. 
@@ -132,31 +145,31 @@ public class Chuck : MonoBehaviour
             {
                 if (touching.collider.gameObject.tag == "Chuck") //If what the ray collided with had a tag of "Chuck" (was a chicken), isBeingHeld is true.
                 {
-                    isBeingHeld = true;
+                    chickyVar.isBeingHeld = true;
                 }
             }
         }
         else if (Input.GetMouseButtonUp(0)) //If the player stops touching the screen, the chicken isn't being held.
         {
-            isBeingHeld = false;
+            chickyVar.isBeingHeld = false;
         }
 
-        return isBeingHeld; //Return the result of if the chicken is being held.
+        return chickyVar.isBeingHeld; //Return the result of if the chicken is being held.
     }
 
     //Called every update while the chicken is in its ThrownState.
     public bool IsThrown()
     {
         //If the timer is less than the time the chicken should spend in its thrown state, increase the timer and return true to stay in this state.
-        if (thrownTimer < thrownTime)
+        if (chickyVar.thrownTimer < chickyConst.thrownTime)
         {
-            thrownTimer += Time.deltaTime;
+            chickyVar.thrownTimer += Time.deltaTime;
             return true;
         }
         else
         {
             //If the timer is equal to or more than the time the chicken should spend in its thrown state, reset the timer and return false to exit this state.
-            thrownTimer = 0;
+            chickyVar.thrownTimer = 0;
             return false;
         }
     }

@@ -15,7 +15,14 @@ public class WanderState : ChuckBaseState
 
     public override Type StateEnter()
     {
-        return null;
+        if (thisChuck.HasJustBeenCreated())
+        {
+            return typeof(ThrownState);
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public override Type StateExit()

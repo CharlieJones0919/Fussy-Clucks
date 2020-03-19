@@ -20,3 +20,9 @@ Commit 4 [01/03/20]:
 	attempted lighting probes.
 - Annotated current Chuck.cs script.
 - Added "Commit Details" file log.
+
+Commit 5 [19/03/20]:
+- Added chicky structures.
+- Added UI camera and a few buttons.
+- Added a placeholder reward ad button and script.
+- Started setting up chicky breed selection with exchangable meshes.
