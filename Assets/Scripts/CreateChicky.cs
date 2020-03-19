@@ -52,7 +52,7 @@ public class CreateChicky : MonoBehaviour
 
                 levelChickens[activeChicky] = false;
 
-                spawnPos = new Vector3(0.0f, Random.Range(2.0f, 6.0f), 0.0f);
+                spawnPos = new Vector3(0.0f, Random.Range(4.0f, 8.0f), 0.0f);
                 activeChicky.transform.position = spawnPos;
                 activeChicky.GetComponent<Chuck>().HasJustBeenCreated();
                 activeChicky.GetComponent<Chuck>().SetBreed(breedName, breedModel);

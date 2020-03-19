@@ -26,7 +26,7 @@ public class ChickyPropertiesController : MonoBehaviour
     private void SetBaseProperties()
     {
         chickyBaseProps.speed = 8.0f;
-        chickyBaseProps.maxVel = 15.0f;
+        chickyBaseProps.maxVel = 20.0f;
 
         chickyBaseProps.wanderTimeLimit = 2.5f;
         chickyBaseProps.fenceKnockback = 5.0f;

@@ -26,3 +26,6 @@ Commit 5 [19/03/20]:
 - Added UI camera and a few buttons.
 - Added a placeholder reward ad button and script.
 - Started setting up chicky breed selection with exchangable meshes.
+
+Commit 6 [19/03/20]:
+- Working interchangable models.

@@ -25,6 +25,7 @@ public class Chuck : MonoBehaviour
 
     private ChickyPropertiesController.BaseProperties chickyConst;
     private UniqueChickenProps chickyVar;
+
     private GameObject chickyModel;
     private Rigidbody rigidBody;      //Chicken's rigidbody.
 
@@ -81,7 +82,8 @@ public class Chuck : MonoBehaviour
     public void SetBreed(string breed, GameObject model)
     {
         chickyVar.breed = breed;
-        chickyModel = model;
+        chickyModel = Instantiate<GameObject>(model, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
+        chickyModel.transform.parent = this.transform;
     }
 
     //Function called on update during the WanderState.
