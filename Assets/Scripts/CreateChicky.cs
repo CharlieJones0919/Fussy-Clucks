@@ -54,7 +54,6 @@ public class CreateChicky : MonoBehaviour
 
                 spawnPos = new Vector3(0.0f, Random.Range(4.0f, 8.0f), 0.0f);
                 activeChicky.transform.position = spawnPos;
-                activeChicky.GetComponent<Chuck>().HasJustBeenCreated();
                 activeChicky.GetComponent<Chuck>().SetBreed(breedName, breedModel);
                 activeChicky.SetActive(true);
                 break;

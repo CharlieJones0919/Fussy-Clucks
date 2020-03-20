@@ -29,3 +29,7 @@ Commit 5 [19/03/20]:
 
 Commit 6 [19/03/20]:
 - Working interchangable models.
+
+Commit 7 [20/03/20]:
+- UI Visual Edits
+- Broke Pickup function somehow.

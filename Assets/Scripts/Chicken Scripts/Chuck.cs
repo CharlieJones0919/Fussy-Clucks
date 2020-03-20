@@ -57,12 +57,6 @@ public class Chuck : MonoBehaviour
         chickyConst = chickyControllerObject.GetComponent<ChickyPropertiesController>().GetBaseProperties();
     }
 
-    public bool HasJustBeenCreated()
-    {
-        justActivated = !justActivated;
-        return justActivated;
-    }
-
     public void SetChickyParams(string name, string breed)
     {
         chickyVar.name = name;
@@ -147,6 +141,7 @@ public class Chuck : MonoBehaviour
             {
                 if (touching.collider.gameObject.tag == "Chuck") //If what the ray collided with had a tag of "Chuck" (was a chicken), isBeingHeld is true.
                 {
+                    Debug.Log("AAAA");
                     chickyVar.isBeingHeld = true;
                 }
             }
