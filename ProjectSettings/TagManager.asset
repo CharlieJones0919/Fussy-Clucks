@@ -7,6 +7,7 @@ TagManager:
   - Chuck
   - Hutch
   - Fence
+  - Nest
   layers:
   - Default
   - TransparentFX
@@ -17,10 +18,10 @@ TagManager:
   - 
   - 
   - Map Limit
-  - Chuck Chucks
+  - Chuck Chuck
   - Hutch
-  - 
-  - 
+  - Ground
+  - Nest
   - 
   - 
   - 

@@ -33,3 +33,16 @@ Commit 6 [19/03/20]:
 Commit 7 [20/03/20]:
 - UI Visual Edits
 - Broke Pickup function somehow.
+
+Commit 8 [15/04/20]:
+- Fixed Pickup function.
+- Added Nest model and munctionality to put Egg inside.
+- Added EggState and egg selection with buttons.
+- Eggs transform into corresponding chicken.
+- Started temperature implementation.
+- Added more variables/properties to the structures, with an additional
+	egg structure.
+- Refined down physics collision checks in settings.
+- Added ground layer.
+- Added another closer camera.
+- Adjusted lighting settings.

@@ -6,8 +6,8 @@ using UnityEngine;
 public class CreateChicky : MonoBehaviour
 {
     private GameObject chickyControllerObject;
-    public string breedName;
-    public GameObject breedModel;
+    public string typeName;
+    public GameObject typeModel;
 
     public Dictionary<GameObject, bool> levelChickens = new Dictionary<GameObject, bool>();
     public GameObject chickyPrefab;
@@ -54,7 +54,7 @@ public class CreateChicky : MonoBehaviour
 
                 spawnPos = new Vector3(0.0f, Random.Range(4.0f, 8.0f), 0.0f);
                 activeChicky.transform.position = spawnPos;
-                activeChicky.GetComponent<Chuck>().SetBreed(breedName, breedModel);
+                activeChicky.GetComponent<Chuck>().SetType(typeName, typeModel);
                 activeChicky.SetActive(true);
                 break;
             }

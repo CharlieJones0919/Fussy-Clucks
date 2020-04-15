@@ -32,7 +32,14 @@ public class PickedUpState : ChuckBaseState
         }
         else
         {
-            return typeof(ThrownState);
+            if (thisChuck.eggProps.isEgg)
+            {
+                return typeof(EggState);
+            }
+            else
+            {
+                return typeof(ThrownState);
+            }
         }
     }
 }
