@@ -127,6 +127,13 @@ public class Chuck : MonoBehaviour
             transform.position = collider.transform.position;
             eggProps.inNest = true;
         }
+        else if (collider.gameObject.tag == "InsideHutch")
+        {
+            if (eggProps.isEgg)
+            {
+                transform.position = new Vector3(collider.transform.position.x, transform.position.y, collider.transform.position.z + 5.0f);
+            }
+        }
     }
 
     //Called by the PickedUpState's update while BeenPickedUp() returns as true. 
@@ -153,7 +160,7 @@ public class Chuck : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //A ray in the direction of the player's touching position from the screen position.
-            touchPosition.y = 0.2f;
+            touchPosition.y = transform.position.y;
 
             if (((touchPosition.x > (transform.position.x - currentColliderRadius)) && (touchPosition.x < (transform.position.x + currentColliderRadius)))
             && ((touchPosition.y > (transform.position.y - currentColliderRadius)) && (touchPosition.y < (transform.position.y + currentColliderRadius)))

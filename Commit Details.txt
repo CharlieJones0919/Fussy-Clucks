@@ -53,3 +53,9 @@ Commit 9 [16/04/20]:
 	vector3 range instead of with raycasting.
 - Changing sphere collider from egg to chicken.
 - Made more of the assets into prefabs for loading in LevelController script.
+
+- Implemented buttons to create hutches and nests.
+- Implemented monetary system/checks.
+- Chickens/eggs are moved to centre if an item spawns on them.
+- Made seed model.
+- Everything is now loaded in at runtime by the LevelLoader script.

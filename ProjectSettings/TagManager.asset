@@ -8,6 +8,7 @@ TagManager:
   - Hutch
   - Fence
   - Nest
+  - InsideHutch
   layers:
   - Default
   - TransparentFX
@@ -22,8 +23,8 @@ TagManager:
   - Hutch
   - Ground
   - Nest
-  - 
-  - 
+  - Seed
+  - InsideHutch
   - 
   - 
   - 

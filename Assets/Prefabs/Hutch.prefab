@@ -10,13 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4061626480563869746}
   - component: {fileID: 4061626480563869747}
-  - component: {fileID: 4061626480563869756}
   - component: {fileID: 4061626480563869758}
   - component: {fileID: 4061626480563869757}
-  - component: {fileID: 4061626480563869759}
+  - component: {fileID: 3536315003950846455}
   m_Layer: 10
   m_Name: Hutch Colliders
-  m_TagString: Untagged
+  m_TagString: Hutch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -48,19 +47,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.077794, y: 1.5670496, z: 0.121336676}
   m_Center: {x: -0.60752004, y: -0.25973913, z: -0.43933237}
---- !u!65 &4061626480563869756
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4061626480563869745}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.3375368, y: 0.5422195, z: 1.3816913}
-  m_Center: {x: -0.61128604, y: 0.8114168, z: -0.00736251}
 --- !u!65 &4061626480563869758
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -87,7 +73,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.20716922, y: 1.5670494, z: 1}
   m_Center: {x: -1.0428344, y: -0.2597391, z: 0.000000065928276}
---- !u!65 &4061626480563869759
+--- !u!65 &3536315003950846455
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -112,7 +98,7 @@ GameObject:
   - component: {fileID: 4061626481049015246}
   m_Layer: 10
   m_Name: Hutch Ramp Collider
-  m_TagString: Untagged
+  m_TagString: Hutch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -156,7 +142,7 @@ GameObject:
   - component: {fileID: 4061626481131399320}
   m_Layer: 10
   m_Name: Inside Hutch Collider
-  m_TagString: Hutch
+  m_TagString: InsideHutch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -186,8 +172,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.6, y: 0.5357911, z: 0.6}
-  m_Center: {x: -0.6075191, y: -0.19, z: 0.00000006650542}
+  m_Size: {x: 0.80798984, y: 1.4748207, z: 0.79518193}
+  m_Center: {x: -0.6071504, y: -0.31264436, z: -0.0066408427}
 --- !u!1 &5439265149496641744
 GameObject:
   m_ObjectHideFlags: 0
@@ -213,8 +199,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5439265149496641744}
-  m_LocalRotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: -18.9, y: 3.62, z: 10.4}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 3.5, y: 3.5, z: 3.5}
   m_Children:
   - {fileID: 4061626480563869746}
@@ -222,7 +208,7 @@ Transform:
   - {fileID: 4061626481131399327}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 45, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &35036703524716789
 MeshFilter:
   m_ObjectHideFlags: 0

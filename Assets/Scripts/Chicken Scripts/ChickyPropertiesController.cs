@@ -45,8 +45,6 @@ public class ChickyPropertiesController : MonoBehaviour
 
     public struct ChickyVariableProps
     {
-        public int cloneNum;
-
         public string name;
         public string type;
         public uint age;
@@ -66,7 +64,7 @@ public class ChickyPropertiesController : MonoBehaviour
         controllerProps.eggColliderRadius = 0.45f;
         controllerProps.chickyColliderRadius = 1.5f;
 
-        controllerProps.timeToStayEgg = 180.0f;
+        controllerProps.timeToStayEgg = 60.0f;
 
         controllerProps.eggColdLimit = 23.0f;
         controllerProps.chuckColdLimit = 8.0f;
