@@ -15,11 +15,13 @@ public class ThrownState : ChuckBaseState
 
     public override Type StateEnter()
     {
+        Debug.Log("Entered ThrownState");
         return null;
     }
 
     public override Type StateExit()
     {
+        Debug.Log("Exited ThrownState");
         return null;
     }
 
@@ -36,7 +38,14 @@ public class ThrownState : ChuckBaseState
         }
         else
         {
-            return typeof(WanderState);
+            if (thisChuck.eggProps.isEgg)
+            {
+                return typeof(EggState);
+            }
+            else
+            {
+                return typeof(WanderState);
+            }
         }
     }
 }

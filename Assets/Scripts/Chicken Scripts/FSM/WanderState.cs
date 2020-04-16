@@ -15,11 +15,13 @@ public class WanderState : ChuckBaseState
 
     public override Type StateEnter()
     {
+        Debug.Log("Entered WanderState");
         return null;
     }
 
     public override Type StateExit()
     {
+        Debug.Log("Exited WanderState");
         return null;
     }
 

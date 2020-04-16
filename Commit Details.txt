@@ -46,3 +46,10 @@ Commit 8 [15/04/20]:
 - Added ground layer.
 - Added another closer camera.
 - Adjusted lighting settings.
+
+Commit 9 [16/04/20]:
+- Added a LevelController script.
+- Changed PickUp function method to check touch position just as within a 
+	vector3 range instead of with raycasting.
+- Changing sphere collider from egg to chicken.
+- Made more of the assets into prefabs for loading in LevelController script.

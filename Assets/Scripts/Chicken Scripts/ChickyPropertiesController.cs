@@ -45,6 +45,8 @@ public class ChickyPropertiesController : MonoBehaviour
 
     public struct ChickyVariableProps
     {
+        public int cloneNum;
+
         public string name;
         public string type;
         public uint age;
@@ -57,7 +59,7 @@ public class ChickyPropertiesController : MonoBehaviour
         public bool isBeingHeld;        //Has chicken been clicked/touched. (Global so it can remain true until touch ends).
     };
 
-    private void Start()
+    private void Awake()
     {
         controllerProps.eggColliderCentre = new Vector3(0.0f, 0.1f, 0.0f);
         controllerProps.chickyColliderCentre = new Vector3(0.0f, -0.15f, 0.0f);
@@ -83,7 +85,7 @@ public class ChickyPropertiesController : MonoBehaviour
         controllerProps.fenceKnockback = 5.0f;
 
         controllerProps.pickUpHeight = 2.0f;
-        controllerProps.fingerFollowSpeed = 200.0f;
+        controllerProps.fingerFollowSpeed = 300.0f;
         controllerProps.thrownTime = 1.0f;
     }
 

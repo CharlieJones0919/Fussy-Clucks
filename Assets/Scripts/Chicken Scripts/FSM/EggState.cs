@@ -15,6 +15,7 @@ public class EggState : ChuckBaseState
 
     public override Type StateEnter()
     {
+        Debug.Log("Entered EggState");
         thisChuck.eggProps.isEgg = true;
         thisChuck.rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
         return null;
@@ -22,6 +23,7 @@ public class EggState : ChuckBaseState
 
     public override Type StateExit()
     {
+        Debug.Log("Exited EggState");
         return null;
     }
 

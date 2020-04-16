@@ -6,10 +6,11 @@ using Random = UnityEngine.Random;  //Specifiying that the "Random" function cal
 
 public class Chuck : MonoBehaviour
 {
-    private GameObject chickyControllerObject;
+    private ChickyPropertiesController propertiesController;
+    private LevelLoader levelLoader;
     private ChickyPropertiesController.ConstProps constProps;
     public ChickyPropertiesController.EggProps eggProps;
-    private ChickyPropertiesController.ChickyVariableProps chickyProps;
+    public ChickyPropertiesController.ChickyVariableProps chickyProps;
 
     private GameObject currentModelClone;
     public GameObject chickyModel;
@@ -17,6 +18,7 @@ public class Chuck : MonoBehaviour
 
     public Rigidbody rigidBody; //Chicken's rigidbody.
     public SphereCollider chuckCollider;
+    public float currentColliderRadius;
 
     //Ran before runtime to initialise variables and to initialise the chicken's FSM.
     private void Awake()
@@ -28,31 +30,28 @@ public class Chuck : MonoBehaviour
     private void InitializeStateMachine()
     {
         Dictionary<Type, ChuckBaseState> states = new Dictionary<Type, ChuckBaseState>(); //Dictionary var to hold the states and their types.
-
+        states.Add(typeof(PickedUpState), new PickedUpState(this)); //Adds PickedUpState to states. (Starting State).
+        states.Add(typeof(ThrownState), new ThrownState(this)); //Adds ThrownState to states. 
         states.Add(typeof(EggState), new EggState(this)); //Adds EggState to states.
-        states.Add(typeof(ThrownState), new ThrownState(this)); //Adds ThrownState to states. (Starting State).
         states.Add(typeof(WanderState), new WanderState(this)); //Adds WanderState to states.
-        states.Add(typeof(PickedUpState), new PickedUpState(this)); //Adds PickedUpState to states.
-
         GetComponent<ChuckStateMachine>().SetStates(states); //Passes the added states into the state machine's setting function.
     }
 
-    //Ran when the object this script is attached to is first activated.
     public void Start()
     {
         rigidBody = GetComponent<Rigidbody>(); //Gets the rigidbody from the object this script is attached to.  
         chuckCollider = GetComponent<SphereCollider>();
-
-        chickyControllerObject = GameObject.Find("ChickyPropertiesController");
-        constProps = chickyControllerObject.GetComponent<ChickyPropertiesController>().GetConstProps();
-
-        Initialise();
+        propertiesController = GameObject.Find("LevelController").GetComponent<ChickyPropertiesController>();
+        levelLoader = GameObject.Find("LevelController").GetComponent<LevelLoader>();
+        constProps = propertiesController.GetConstProps();
+        Initialize();
     }
 
-    public void Initialise()
+    public void Initialize()
     {
         chuckCollider.center = constProps.eggColliderCentre;
         chuckCollider.radius = constProps.eggColliderRadius;
+        currentColliderRadius = chuckCollider.radius;
 
         //Egg's Initial Properties
         eggProps.isEgg = true;
@@ -61,7 +60,7 @@ public class Chuck : MonoBehaviour
         eggProps.inNest = false;
 
         //Chicky's Initial Properties
-        chickyProps.age = 1;
+        chickyProps.age = 0;
         chickyProps.temp = 25;
         chickyProps.hunger = 100;
 
@@ -153,18 +152,18 @@ public class Chuck : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            RaycastHit touching; //What the ray has collided with.
-            Ray touchPos = Camera.main.ScreenPointToRay(Input.mousePosition); //A ray in the direction of the player's touching position from the screen position.
+            Vector3 touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //A ray in the direction of the player's touching position from the screen position.
+            touchPosition.y = 0.2f;
 
-            if (Physics.Raycast(touchPos, out touching)) //If the ray has collided with something...
+            if (((touchPosition.x > (transform.position.x - currentColliderRadius)) && (touchPosition.x < (transform.position.x + currentColliderRadius)))
+            && ((touchPosition.y > (transform.position.y - currentColliderRadius)) && (touchPosition.y < (transform.position.y + currentColliderRadius)))
+            && ((touchPosition.z > (transform.position.z - currentColliderRadius)) && (touchPosition.z < (transform.position.z + currentColliderRadius))))
             {
-                if (touching.collider.gameObject.tag == "Chuck") //If what the ray collided with had a tag of "Chuck" (was a chicken), isBeingHeld is true.
-                {
-                    chickyProps.isBeingHeld = true;
-                }
+                chickyProps.isBeingHeld = true;
             }
         }
-        else if (Input.GetMouseButtonUp(0)) //If the player stops touching the screen, the chicken isn't being held.
+
+        if (Input.GetMouseButtonUp(0)) //If the player stops touching the screen, the chicken isn't being held.
         {
             chickyProps.isBeingHeld = false;
         }
@@ -191,15 +190,13 @@ public class Chuck : MonoBehaviour
 
     public bool IsEggStill()
     {
-        Debug.Log(eggProps.timeUntilHatch);
-   
         //If the timer is less than the time the chicken should spend as an egg, increase the timer and return true to stay in this state.
         if (eggProps.timeUntilHatch < constProps.timeToStayEgg)
         {
             eggProps.timeUntilHatch += Time.deltaTime;
             return true;
         }
-        else
+        else 
         {
             //If the timer is equal to or more than the time the chicken should spend in as an egg, reset the timer and return false to exit this state.
             eggProps.timeUntilHatch = 0;
@@ -212,6 +209,7 @@ public class Chuck : MonoBehaviour
         transform.position = new Vector3(transform.position.x, transform.position.y + 5.0f, transform.position.z);
         chuckCollider.center = constProps.chickyColliderCentre;
         chuckCollider.radius = constProps.chickyColliderRadius;
+        currentColliderRadius = chuckCollider.radius;
 
         switch (chickyProps.type)
         {
@@ -227,27 +225,27 @@ public class Chuck : MonoBehaviour
         }
     }
 
-    public void IncreaseTemperature()
-    {
+    //////////public void IncreaseTemperature()
+    //////////{
   
 
-    }
+    //////////}
 
-    public void DecreaseTemperature()
-    {
-        chickyProps.temp -= Time.deltaTime;
+    //////////public void DecreaseTemperature()
+    //////////{
+    //////////    chickyProps.temp -= Time.deltaTime;
 
-        if (eggProps.isEgg)
-        {
-            if (chickyProps.temp <= constProps.eggColdLimit)
-            {
-                //Do Something
+    //////////    if (eggProps.isEgg)
+    //////////    {
+    //////////        if (chickyProps.temp <= constProps.eggColdLimit)
+    //////////        {
+    //////////            //Do Something
 
-                if (chickyProps.temp <= constProps.eggFreezeDeathTemp)
-                {
-                    //Die
-                }
-            }            
-        }
-    }
+    //////////            if (chickyProps.temp <= constProps.eggFreezeDeathTemp)
+    //////////            {
+    //////////                //Die
+    //////////            }
+    //////////        }            
+    //////////    }
+    //////////}
 }

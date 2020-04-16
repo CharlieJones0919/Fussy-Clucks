@@ -15,11 +15,13 @@ public class PickedUpState : ChuckBaseState
 
     public override Type StateEnter()
     {
+        Debug.Log("Entered PickedUpState");
         return null;
     }
 
     public override Type StateExit()
     {
+        Debug.Log("Exited PickedUpState");
         return null;
     }
 
@@ -30,16 +32,13 @@ public class PickedUpState : ChuckBaseState
             thisChuck.PickedUp();
             return null;
         }
+        else if (thisChuck.IsEggStill())
+        {
+            return typeof(EggState);
+        }
         else
         {
-            if (thisChuck.eggProps.isEgg)
-            {
-                return typeof(EggState);
-            }
-            else
-            {
-                return typeof(ThrownState);
-            }
+            return typeof(ThrownState);
         }
     }
 }
