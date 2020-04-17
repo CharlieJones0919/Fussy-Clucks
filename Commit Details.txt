@@ -59,3 +59,12 @@ Commit 9 [16/04/20]:
 - Chickens/eggs are moved to centre if an item spawns on them.
 - Made seed model.
 - Everything is now loaded in at runtime by the LevelLoader script.
+
+Commit 10 [17/04/20]:
+- Started implementing chicken stats and checks.
+- Implemented seed pool and creation.
+- Automated button text based on button name in editor, and set each item 
+	into a list with a corresponding price.
+- Implemented item purchase and deactivation at start for game start proofing.
+- Generalised deactivation function in LevelController (renamed LevelLoader).
+- Slight UI formatting changes.

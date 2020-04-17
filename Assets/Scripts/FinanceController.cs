@@ -15,16 +15,14 @@ public class FinanceController : MonoBehaviour
         public string itemName;
         public int itemPrice;
     };
-
     public ItemForSale[] itemList;
-    private const int numOfItems = 4;
+
+    private const int numOfItems = 5;
     private int counter;
 
     // Start is called before the first frame update
     private void Start()
     {
-        gold = 35;
-
         itemList = new ItemForSale[numOfItems];
         counter = 0;
         itemList[counter].itemName = "Chicky Egg";
@@ -36,11 +34,20 @@ public class FinanceController : MonoBehaviour
 
         counter++;
         itemList[counter].itemName = "Egg Nest";
-        itemList[counter].itemPrice = 20;
+        itemList[counter].itemPrice = 30;
 
         counter++;
         itemList[counter].itemName = "Hutch";
         itemList[counter].itemPrice = 100;
+
+        counter++;
+        itemList[counter].itemName = "Seed";
+        itemList[counter].itemPrice = 10;
+    }
+
+    public int GetNumOfItems()
+    {
+        return numOfItems;
     }
 
     public int GetItemPrice(string item)
@@ -53,7 +60,6 @@ public class FinanceController : MonoBehaviour
             }
         }
 
-        Debug.Log("Item Price Not Found");
         return 0;
     }
 
@@ -81,19 +87,40 @@ public class FinanceController : MonoBehaviour
     public void UpdateUI()
     {
         moneyTextbox.text = (gold + "g");
-        counter = 0;
+        SetButtonAvailability();
+    }
 
+    public void SetButtonAvailability()
+    {
+        counter = 0;
+        
         foreach (KeyValuePair<Button, bool> buttonRef in buttonRefs)
         {
             currentButton = buttonRef.Key;
 
-            if (itemList[counter].itemPrice > gold)
+            if ((itemList[counter].itemPrice > gold))
             {
                 currentButton.interactable = false;
             }
             else
             {
                 currentButton.interactable = true;
+            }
+
+            counter++;
+        }
+    }
+
+    public void DisableButton(string buttonName)
+    {
+        counter = 0;
+
+        foreach (KeyValuePair<Button, bool> buttonRef in buttonRefs)
+        {
+            if ((itemList[counter].itemName == buttonName))
+            {
+                currentButton = buttonRef.Key;
+                currentButton.interactable = false;
             }
 
             counter++;

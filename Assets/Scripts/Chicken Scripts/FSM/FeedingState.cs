@@ -4,24 +4,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WanderState : ChuckBaseState
+public class FeedingState : ChuckBaseState
 {
     private Chuck thisChuck;
 
-    public WanderState(Chuck thisChuck)
+    public FeedingState(Chuck thisChuck)
     {
         this.thisChuck = thisChuck;
     }
 
     public override Type StateEnter()
     {
-        Debug.Log("Entered WanderState");
+        Debug.Log("Entered FeedingState");
         return null;
     }
 
     public override Type StateExit()
     {
-        Debug.Log("Exited WanderState");
+        Debug.Log("Exited FeedingState");
         return null;
     }
 
@@ -32,19 +32,10 @@ public class WanderState : ChuckBaseState
         if (thisChuck.BeenPickedUp())
         {
             return typeof(PickedUpState);
-        }
-        else if (thisChuck.chickyProps.inHutch || thisChuck.chickyProps.inNest || thisChuck.chickyProps.sleepy)
-        {
-            return null;
-        }
-        else if (thisChuck.chickyProps.hungry && thisChuck.SeedAvailable())
-        {
-            thisChuck.GoToSeed();
-            return null;
+            
         }
         else
         {
-            thisChuck.Wandering();
             return null;
         }
     }

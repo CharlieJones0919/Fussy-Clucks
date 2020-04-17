@@ -9,6 +9,7 @@ TagManager:
   - Fence
   - Nest
   - InsideHutch
+  - Seed
   layers:
   - Default
   - TransparentFX

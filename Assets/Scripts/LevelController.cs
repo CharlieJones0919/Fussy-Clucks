@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
-public class LevelLoader : MonoBehaviour
+public class LevelController : MonoBehaviour
 {
-    private string sceneNum;
+    public bool beginningOfGame;
+    public bool seedAvailable;
+
+    private int sceneNum;
     public FinanceController finances;
+    private Vector3 inactivePosition = new Vector3(0.0f, -5.0f, 0.0f);
 
     public Dictionary<GameObject, bool> levelChickens = new Dictionary<GameObject, bool>();
     public Dictionary<GameObject, bool> levelSeed = new Dictionary<GameObject, bool>();
@@ -32,14 +36,25 @@ public class LevelLoader : MonoBehaviour
 
     private void Start()
     {
-        sceneNum = SceneManager.GetActiveScene().name;
-        sceneNum = sceneNum.Substring(6, 1);
         finances = this.gameObject.GetComponent<FinanceController>();
+        sceneNum = System.Convert.ToInt32(SceneManager.GetActiveScene().name.Substring(6, 1));
 
-        chickyPoolSize = System.Convert.ToInt32(sceneNum) * 5;
-        seedPoolSize = System.Convert.ToInt32(sceneNum) * 5;
-        nestPoolSize = System.Convert.ToInt32(sceneNum) * 3;
-        hutchPoolSize = System.Convert.ToInt32(sceneNum) * 2;
+        finances.gold = 35;
+        seedAvailable = false;
+
+        if (sceneNum == 1)
+        {
+            beginningOfGame = true;
+        }
+        else
+        {
+            beginningOfGame = false;
+        }
+
+        chickyPoolSize = sceneNum * 5;
+        seedPoolSize = chickyPoolSize * 2;
+        nestPoolSize = sceneNum * 3;
+        hutchPoolSize = sceneNum * 2;
 
         LoadPrefabPool(chickyPrefab, chickyPoolSize, levelChickens);
         LoadPrefabPool(seedPrefab, seedPoolSize, levelSeed);
@@ -70,11 +85,17 @@ public class LevelLoader : MonoBehaviour
             prefabClone.SetActive(true);
     }
 
-    public void DeactivateChicky(GameObject deadChicky)
+    public void DeactivateObject(GameObject whichObject, Dictionary<GameObject, bool> whichList)
     {
-        deadChicky.transform.position = chickyPrefab.transform.position;
-        deadChicky.SetActive(false);
-        levelChickens[deadChicky] = true;
+        whichObject.transform.position = inactivePosition;
+
+        if (whichList == levelChickens)
+        {
+            whichObject.GetComponent<Chuck>().Initialize();
+        }
+
+        whichObject.SetActive(false);
+        whichList[whichObject] = true;
     }
 
     public Dictionary<GameObject, bool> GetChuckPool()

@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1180887742865106249
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1180887742865106251}
+  - component: {fileID: 1180887742865106250}
+  - component: {fileID: 1180887742865106252}
+  - component: {fileID: 1180887742865106253}
+  m_Layer: 0
+  m_Name: LevelController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1180887742865106251
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180887742865106249}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1180887742865106250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180887742865106249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64a1336de0ce8244dbe3fd7e6bc0ecf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1180887742865106252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180887742865106249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d361c3e1c639f4ea4306a4941bd50a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  beginningOfGame: 0
+  seedAvailable: 0
+  finances: {fileID: 0}
+  chickyPoolSize: 0
+  seedPoolSize: 0
+  nestPoolSize: 0
+  hutchPoolSize: 0
+  chickyPrefab: {fileID: 6358850348320953858, guid: a4e1c30442b3e6d4fb47d76e470310e6,
+    type: 3}
+  seedPrefab: {fileID: 7100262064301535167, guid: 1aade7bfb3f469f40bc313acdf4446cb,
+    type: 3}
+  nestPrefab: {fileID: 3592344293565025338, guid: df682b9eb689b62439685e85b879ab6f,
+    type: 3}
+  hutchPrefab: {fileID: 5439265149496641744, guid: 1769e285e58946f4eb0eeecb886e1e1a,
+    type: 3}
+  cameraSetupPrefab: {fileID: 8006448407723838913, guid: 93b774836df3ac3408b170090b4114fe,
+    type: 3}
+  lightingSetupPrefab: {fileID: 7824848384940724216, guid: 374b671305d42884e9b8f89eb2113123,
+    type: 3}
+  UIPrefab: {fileID: 9066192440957817260, guid: 77570830f04c2b3428cef084aaa06abe,
+    type: 3}
+  fencePrefab: {fileID: 6511128970496848486, guid: 0908474cd4cb454428b46ca9d02fc25f,
+    type: 3}
+  groundPrefab: {fileID: 1680478445960146111, guid: 34d9f53dbb1ab10468c7556668964747,
+    type: 3}
+--- !u!114 &1180887742865106253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180887742865106249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc7d0607fd5eaa146b1b1cf52e0aee94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moneyTextbox: {fileID: 0}
+  gold: 0

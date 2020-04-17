@@ -12,6 +12,7 @@ public class ChickyPropertiesController : MonoBehaviour
         public float chickyColliderRadius;
 
         public float timeToStayEgg;        //Amount of time to spend as an egg;
+        public float seedFeedAmount;
 
         public float eggColdLimit;
         public float chuckColdLimit;
@@ -40,21 +41,30 @@ public class ChickyPropertiesController : MonoBehaviour
         public bool isEgg;
         public float timeUntilHatch;
         public uint health;
-        public bool inNest;
     }
 
     public struct ChickyVariableProps
     {
         public string name;
         public string type;
-        public uint age;
+
         public float temp;
-        public uint hunger;
+        public float hunger;
+        public float attention;
+        public float rest;
 
         public Vector2 randomDir;       //The random direction on the X and Z axis that the chicken wanders.
         public float wanderTimer;  //Amount of time the chicken has spent wandering since the last direction change.
         public float thrownTimer;              //How long has passed in seconds since the player stopped touching the chicken.
         public bool isBeingHeld;        //Has chicken been clicked/touched. (Global so it can remain true until touch ends).
+
+        public bool inNest;
+        public bool inHutch;
+        public bool cold;
+        public bool hot;
+        public bool hungry;
+        public bool lonely;
+        public bool sleepy;
     };
 
     private void Awake()
@@ -64,7 +74,8 @@ public class ChickyPropertiesController : MonoBehaviour
         controllerProps.eggColliderRadius = 0.45f;
         controllerProps.chickyColliderRadius = 1.5f;
 
-        controllerProps.timeToStayEgg = 60.0f;
+        controllerProps.timeToStayEgg = 5.0f;
+        controllerProps.seedFeedAmount = 10.0f;
 
         controllerProps.eggColdLimit = 23.0f;
         controllerProps.chuckColdLimit = 8.0f;

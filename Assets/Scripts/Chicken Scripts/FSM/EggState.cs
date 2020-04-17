@@ -29,17 +29,10 @@ public class EggState : ChuckBaseState
 
     public override Type StateUpdate()
     {
+        //thisChuck.CheckStats();
+
         if (thisChuck.IsEggStill())
         {
-            //if (thisChuck.eggProps.inNest)
-            //{
-            //    thisChuck.IncreaseTemperature();
-            //}
-            //else
-            //{
-            //    thisChuck.DecreaseTemperature();
-            //}
-
             if (thisChuck.BeenPickedUp())
             {
                 return typeof(PickedUpState);
@@ -54,7 +47,7 @@ public class EggState : ChuckBaseState
             thisChuck.Hatch();
             thisChuck.eggProps.isEgg = false;
             thisChuck.rigidBody.constraints = RigidbodyConstraints.None;
-            return typeof(ThrownState);
+            return typeof(WanderState);
         }
     }
 }

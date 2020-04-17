@@ -27,7 +27,9 @@ public class PickedUpState : ChuckBaseState
 
     public override Type StateUpdate()
     {
-        if (thisChuck.BeenPickedUp() == true)
+        //thisChuck.CheckStats();
+
+        if (thisChuck.BeenPickedUp())
         {
             thisChuck.PickedUp();
             return null;

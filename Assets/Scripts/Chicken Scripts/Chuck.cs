@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;  //Specifiying that the "Random" function cal
 public class Chuck : MonoBehaviour
 {
     private ChickyPropertiesController propertiesController;
-    private LevelLoader levelLoader;
+    private LevelController levelController;
     private ChickyPropertiesController.ConstProps constProps;
     public ChickyPropertiesController.EggProps eggProps;
     public ChickyPropertiesController.ChickyVariableProps chickyProps;
@@ -19,6 +19,8 @@ public class Chuck : MonoBehaviour
     public Rigidbody rigidBody; //Chicken's rigidbody.
     public SphereCollider chuckCollider;
     public float currentColliderRadius;
+
+    public Vector3 seedPosition;
 
     //Ran before runtime to initialise variables and to initialise the chicken's FSM.
     private void Awake()
@@ -42,7 +44,7 @@ public class Chuck : MonoBehaviour
         rigidBody = GetComponent<Rigidbody>(); //Gets the rigidbody from the object this script is attached to.  
         chuckCollider = GetComponent<SphereCollider>();
         propertiesController = GameObject.Find("LevelController").GetComponent<ChickyPropertiesController>();
-        levelLoader = GameObject.Find("LevelController").GetComponent<LevelLoader>();
+        levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
         constProps = propertiesController.GetConstProps();
         Initialize();
     }
@@ -57,12 +59,19 @@ public class Chuck : MonoBehaviour
         eggProps.isEgg = true;
         eggProps.timeUntilHatch = 0.0f;
         eggProps.health = 100;
-        eggProps.inNest = false;
 
         //Chicky's Initial Properties
-        chickyProps.age = 0;
-        chickyProps.temp = 25;
-        chickyProps.hunger = 100;
+        chickyProps.temp = 25.0f;
+        chickyProps.hunger = 100.0f;
+        chickyProps.attention = 100.0f;
+        chickyProps.rest = 100.0f;
+
+        chickyProps.inNest = false;
+        chickyProps.cold = false;
+        chickyProps.hot = false;
+        chickyProps.hungry = false;
+        chickyProps.lonely = false;
+        chickyProps.sleepy = false;
 
         chickyProps.randomDir = UnityEngine.Random.insideUnitCircle; //Sets the Vector2 its initial 2 random floats between -1 and 1.
         chickyProps.wanderTimer = 0.0f;
@@ -122,16 +131,56 @@ public class Chuck : MonoBehaviour
             rigidBody.AddForce(pushDir.x * constProps.fenceKnockback, 0.0f, pushDir.y * constProps.fenceKnockback, ForceMode.Impulse);
             chickyProps.wanderTimer = constProps.wanderTimeLimit;
         }
-        else if (eggProps.isEgg && (collider.gameObject.tag == "Nest"))
+        else if (collider.gameObject.tag == "Chuck")
+        {
+            if ((eggProps.isEgg) && (eggProps.health > 0))
+            {
+                eggProps.health--;
+            }
+        }
+        else if (collider.gameObject.tag == "Nest")
         {
             transform.position = collider.transform.position;
-            eggProps.inNest = true;
+            chickyProps.inNest = true;
         }
         else if (collider.gameObject.tag == "InsideHutch")
         {
-            if (eggProps.isEgg)
+            if (!eggProps.isEgg)
             {
-                transform.position = new Vector3(collider.transform.position.x, transform.position.y, collider.transform.position.z + 5.0f);
+                chickyProps.inHutch = true;
+            }
+        }
+        else if (collider.gameObject.tag == "Seed")
+        {
+            if ((!eggProps.isEgg) && (chickyProps.hungry))
+            {
+                levelController.DeactivateObject(collider.gameObject, levelController.levelSeed);
+
+                if ((chickyProps.hunger + constProps.seedFeedAmount) > 100)
+                {
+                    chickyProps.hunger = 100;
+                }
+                else
+                {
+                    chickyProps.hunger += constProps.seedFeedAmount;
+                }
+
+                levelController.seedAvailable = false;
+            }
+        }
+    }
+
+    private void OnCollisionExit(Collision collider)
+    {
+        if (collider.gameObject.tag == "Nest")
+        {
+            chickyProps.inNest = false;
+        }
+        else if (collider.gameObject.tag == "InsideHutch")
+        {
+            if (!eggProps.isEgg)
+            {
+                chickyProps.inHutch = false;
             }
         }
     }
@@ -232,27 +281,138 @@ public class Chuck : MonoBehaviour
         }
     }
 
-    //////////public void IncreaseTemperature()
-    //////////{
-  
+    public void CheckStats()
+    {
+        //Check Egg Health
+        if (eggProps.isEgg)
+        {
+            CheckEggHealth();
+        }
 
-    //////////}
+        //Check Temperature
+        if (eggProps.isEgg)
+        {
+            CheckTemperature(constProps.eggColdLimit, constProps.eggFreezeDeathTemp, constProps.eggHotLimit, constProps.eggOverheatDeathTemp);
+        }
+        else
+        {
+            CheckTemperature(constProps.chuckColdLimit, constProps.chuckHotLimit, constProps.chuckFreezeDeathTemp, constProps.chuckOverheatDeathTemp);
+        }
 
-    //////////public void DecreaseTemperature()
-    //////////{
-    //////////    chickyProps.temp -= Time.deltaTime;
+        //Check Hunger
+        CheckHunger();
+        //Check Attention
+        CheckAttention();
+        //Check Rest
+        CheckRest();
+    }
 
-    //////////    if (eggProps.isEgg)
-    //////////    {
-    //////////        if (chickyProps.temp <= constProps.eggColdLimit)
-    //////////        {
-    //////////            //Do Something
+    private void CheckEggHealth()
+    {
+        if (eggProps.health <= 0)
+        {
+            levelController.DeactivateObject(transform.gameObject, levelController.levelChickens);
+        }
+    }
 
-    //////////            if (chickyProps.temp <= constProps.eggFreezeDeathTemp)
-    //////////            {
-    //////////                //Die
-    //////////            }
-    //////////        }            
-    //////////    }
-    //////////}
+    private void CheckTemperature(float coldLimit, float heatLimit, float coldDeath, float heatDeath)
+    {
+        if ((chickyProps.inNest) && (chickyProps.temp < 100.0f))
+        {
+            chickyProps.temp += Time.deltaTime;
+        }
+        else if ((!chickyProps.inNest) && (chickyProps.temp > 0.0f))
+        {
+            chickyProps.temp -= Time.deltaTime;
+        }
+
+        if (chickyProps.temp <= coldLimit)
+        {
+            chickyProps.cold = true;
+            chickyProps.hot = false;
+
+            if (chickyProps.temp <= coldDeath)
+            {
+                levelController.DeactivateObject(transform.gameObject, levelController.levelChickens);
+            }
+        }
+        else if (chickyProps.temp >= heatLimit)
+        {
+            chickyProps.cold = false;
+            chickyProps.hot = true;
+
+            if (chickyProps.temp >= heatDeath)
+            {
+                levelController.DeactivateObject(transform.gameObject, levelController.levelChickens);
+            }
+        }
+    }
+
+    private void CheckHunger()
+    {
+        if (chickyProps.hunger > 0.0f)
+        {
+            chickyProps.hunger += Time.deltaTime;
+        }
+
+        if (chickyProps.hunger < 50.0f)
+        {
+            chickyProps.hungry = true;
+
+            if (chickyProps.hunger <= 0)
+            {
+                levelController.DeactivateObject(transform.gameObject, levelController.levelChickens);
+            }
+        }
+    }
+
+    private void CheckAttention()
+    {
+        if ((chickyProps.isBeingHeld) && (chickyProps.attention < 100.0f))
+        {
+            chickyProps.attention += Time.deltaTime;
+        }
+        else if ((!chickyProps.isBeingHeld) && (chickyProps.attention > 0.0f))
+        {
+            chickyProps.rest -= Time.deltaTime;
+        }
+
+        if (chickyProps.attention < 25.0f)
+        {
+            chickyProps.lonely = true;
+        }
+    }
+
+    private void CheckRest()
+    {
+        if ((chickyProps.inHutch) && (chickyProps.rest < 100.0f))
+        {
+            chickyProps.rest += Time.deltaTime;
+        }
+        else if ((!chickyProps.inHutch) && (chickyProps.rest > 0.0f))
+        {
+            chickyProps.rest -= Time.deltaTime;
+        }
+
+        if (chickyProps.rest < 10.0f)
+        {
+            chickyProps.sleepy = true;
+        }
+    }
+
+    public void SetSeedAsAvailable(Vector3 newSeedPos)
+    {
+        seedPosition = newSeedPos;
+        levelController.seedAvailable = true;
+    }
+
+    public bool SeedAvailable()
+    {
+        return levelController.seedAvailable;
+    }
+
+    public void GoToSeed()
+    {
+        rigidBody.AddForce((seedPosition - transform.position) * constProps.speed);
+    }
 }
