@@ -29,7 +29,7 @@ public class EggState : ChuckBaseState
 
     public override Type StateUpdate()
     {
-        //thisChuck.CheckStats();
+        thisChuck.CheckStats();
 
         if (thisChuck.IsEggStill())
         {

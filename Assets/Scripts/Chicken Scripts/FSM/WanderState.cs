@@ -27,7 +27,7 @@ public class WanderState : ChuckBaseState
 
     public override Type StateUpdate()
     {
-        //thisChuck.CheckStats();
+        thisChuck.CheckStats();
 
         if (thisChuck.BeenPickedUp())
         {

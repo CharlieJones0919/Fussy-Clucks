@@ -43,7 +43,6 @@ public class ChickyPropertiesController : MonoBehaviour
     {
         public bool isEgg;
         public float timeUntilHatch;
-        public uint health;
     }
 
     public struct ChickyVariableProps
@@ -81,8 +80,8 @@ public class ChickyPropertiesController : MonoBehaviour
         controllerProps.eggColliderRadius = 0.45f;
         controllerProps.chickyColliderRadius = 1.5f;
 
-        controllerProps.timeToStayEgg = 10.0f;
-        controllerProps.seedFeedAmount = 10.0f;
+        controllerProps.timeToStayEgg = 30.0f;
+        controllerProps.seedFeedAmount = 20.0f;
 
         controllerProps.eggColdLimit = 23.0f;
         controllerProps.chuckColdLimit = 8.0f;

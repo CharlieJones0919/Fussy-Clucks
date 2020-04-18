@@ -75,3 +75,9 @@ Commit 11 [18/04/20]:
 - Implemented coin drops dependant on the chicken's stats.
 - Implemented feeding.
 - Made starting state EggState.
+
+Commit 12 [18/04/20]:
+- Implemented chicky property output to UI.
+- Implemented naming of chickens.
+- Ensured only 1 chicken can be put in a nest at once.
+- Created icons for UI output which are triggered by stat checks.

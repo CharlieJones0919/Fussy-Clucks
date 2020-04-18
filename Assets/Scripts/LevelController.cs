@@ -10,6 +10,7 @@ public class LevelController : MonoBehaviour
 
     private int sceneNum;
     public FinanceController finances;
+    public StatOutput uiOutput;
     private Vector3 inactivePosition = new Vector3(0.0f, -5.0f, 0.0f);
 
     public Dictionary<GameObject, bool> levelChickens = new Dictionary<GameObject, bool>();

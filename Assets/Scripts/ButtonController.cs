@@ -60,6 +60,7 @@ public class ButtonController : MonoBehaviour
                 activeObject.GetComponent<Chuck>().SetType(typeName, typeModel);
                 activeObject.SetActive(true);
 
+                levelController.uiOutput.whichChicky = activeObject;
                 levelController.finances.SpendGold(levelController.finances.GetItemPrice(typeName));
                 break;
             }
