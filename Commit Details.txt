@@ -68,3 +68,10 @@ Commit 10 [17/04/20]:
 - Implemented item purchase and deactivation at start for game start proofing.
 - Generalised deactivation function in LevelController (renamed LevelLoader).
 - Slight UI formatting changes.
+
+Commit 11 [18/04/20]:
+- Made some of the colliders triggers like the InsideHutch collider.
+- Added coins model and pool load in LevelController.
+- Implemented coin drops dependant on the chicken's stats.
+- Implemented feeding.
+- Made starting state EggState.

@@ -40,14 +40,7 @@ public class ThrownState : ChuckBaseState
         }
         else
         {
-            if (thisChuck.eggProps.isEgg)
-            {
-                return typeof(EggState);
-            }
-            else
-            {
-                return typeof(WanderState);
-            }
+            return typeof(WanderState);
         }
     }
 }

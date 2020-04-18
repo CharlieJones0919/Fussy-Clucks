@@ -21,6 +21,8 @@ public class Chuck : MonoBehaviour
     public float currentColliderRadius;
 
     public Vector3 seedPosition;
+    public GameObject activeCoin;
+    public int coinDropAmount;
 
     //Ran before runtime to initialise variables and to initialise the chicken's FSM.
     private void Awake()
@@ -32,9 +34,9 @@ public class Chuck : MonoBehaviour
     private void InitializeStateMachine()
     {
         Dictionary<Type, ChuckBaseState> states = new Dictionary<Type, ChuckBaseState>(); //Dictionary var to hold the states and their types.
-        states.Add(typeof(PickedUpState), new PickedUpState(this)); //Adds PickedUpState to states. (Starting State).
+        states.Add(typeof(EggState), new EggState(this)); //Adds EggState to states. (Starting State).
+        states.Add(typeof(PickedUpState), new PickedUpState(this)); //Adds PickedUpState to states. 
         states.Add(typeof(ThrownState), new ThrownState(this)); //Adds ThrownState to states. 
-        states.Add(typeof(EggState), new EggState(this)); //Adds EggState to states.
         states.Add(typeof(WanderState), new WanderState(this)); //Adds WanderState to states.
         GetComponent<ChuckStateMachine>().SetStates(states); //Passes the added states into the state machine's setting function.
     }
@@ -69,7 +71,7 @@ public class Chuck : MonoBehaviour
         chickyProps.inNest = false;
         chickyProps.cold = false;
         chickyProps.hot = false;
-        chickyProps.hungry = false;
+        chickyProps.hungry = true;
         chickyProps.lonely = false;
         chickyProps.sleepy = false;
 
@@ -77,6 +79,8 @@ public class Chuck : MonoBehaviour
         chickyProps.wanderTimer = 0.0f;
         chickyProps.thrownTimer = 0.0f;
         chickyProps.isBeingHeld = false;
+
+        chickyProps.timeSinceCoinDrop = 0.0f;
     }
 
     public void SetType(string type, GameObject model)
@@ -100,12 +104,6 @@ public class Chuck : MonoBehaviour
     //Function called on update during the WanderState.
     public void Wandering()
     {
-        //If the chicken's velocity exceeds its maximum velocity, decrease it.
-        if (rigidBody.velocity.magnitude > constProps.maxVel)
-        {
-            rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, constProps.maxVel);
-        }
-
         //If the time the chicken has spent wandering since last changing direction is more than or equal to the time the 
         //chicken should spend spend wandering in one direction, set the random direction to a new Vector2 and reset the wander time.
         if (chickyProps.wanderTimer >= constProps.wanderTimeLimit)
@@ -116,11 +114,18 @@ public class Chuck : MonoBehaviour
 
         //Move the chicken's rigidbody in the direction of the current random direction and increase the wander time passed variable.
         rigidBody.AddForce(chickyProps.randomDir.x * constProps.speed, 0.0f, chickyProps.randomDir.y * constProps.speed, ForceMode.Force);
+
+        //If the chicken's velocity exceeds its maximum velocity, clamp it within the maximum velocity.
+        if (rigidBody.velocity.magnitude > constProps.maxVel)
+        {
+            rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, constProps.maxVel);
+        }
+
         chickyProps.wanderTimer += Time.deltaTime;
     }
 
     //Called when the object's collider touches a different collider.
-    void OnCollisionEnter(Collision collider)
+    private void OnCollisionEnter(Collision collider)
     {
         if (collider.gameObject.tag == "Fence")
         {
@@ -140,17 +145,25 @@ public class Chuck : MonoBehaviour
         }
         else if (collider.gameObject.tag == "Nest")
         {
-            transform.position = collider.transform.position;
+            rigidBody.velocity = Vector3.zero;
+            transform.position = new Vector3(collider.transform.position.x, 0.5f, collider.transform.position.z);
+            rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             chickyProps.inNest = true;
         }
-        else if (collider.gameObject.tag == "InsideHutch")
+    }
+
+    private void OnCollisionExit(Collision collider)
+    {
+        if (collider.gameObject.tag == "Nest")
         {
-            if (!eggProps.isEgg)
-            {
-                chickyProps.inHutch = true;
-            }
+            rigidBody.constraints = RigidbodyConstraints.None;
+            chickyProps.inNest = false;
         }
-        else if (collider.gameObject.tag == "Seed")
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.tag == "Seed")
         {
             if ((!eggProps.isEgg) && (chickyProps.hungry))
             {
@@ -168,26 +181,32 @@ public class Chuck : MonoBehaviour
                 levelController.seedAvailable = false;
             }
         }
-    }
-
-    private void OnCollisionExit(Collision collider)
-    {
-        if (collider.gameObject.tag == "Nest")
-        {
-            chickyProps.inNest = false;
-        }
         else if (collider.gameObject.tag == "InsideHutch")
         {
             if (!eggProps.isEgg)
             {
+                rigidBody.velocity = Vector3.zero;
+                rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+                chickyProps.inHutch = true;
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider collider)
+    { 
+        if (collider.gameObject.tag == "InsideHutch")
+        {
+            if (!eggProps.isEgg)
+            {
+                rigidBody.constraints = RigidbodyConstraints.None;
                 chickyProps.inHutch = false;
             }
         }
     }
 
-    //Called by the PickedUpState's update while BeenPickedUp() returns as true. 
-    //Moves the chicken towards the position of the player's finger on the screen.
-    public void PickedUp()
+        //Called by the PickedUpState's update while BeenPickedUp() returns as true. 
+        //Moves the chicken towards the position of the player's finger on the screen.
+        public void PickedUp()
     {
         if (eggProps.isEgg)
         {
@@ -208,7 +227,7 @@ public class Chuck : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3 touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //A ray in the direction of the player's touching position from the screen position.
+            Vector3 touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //A vector of the player's touching position from the screen position into the world position.
             touchPosition.y = transform.position.y;
 
             if (((touchPosition.x > (transform.position.x - currentColliderRadius)) && (touchPosition.x < (transform.position.x + currentColliderRadius)))
@@ -413,6 +432,68 @@ public class Chuck : MonoBehaviour
 
     public void GoToSeed()
     {
-        rigidBody.AddForce((seedPosition - transform.position) * constProps.speed);
+        rigidBody.AddForce((seedPosition - transform.position).normalized * constProps.speed);
+        if (rigidBody.velocity.magnitude > constProps.maxVel)
+        {
+            rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, constProps.maxVel);
+        }
+    }
+
+    public void CheckCoinDrop()
+    {
+        if (chickyProps.timeSinceCoinDrop >= constProps.timeBetweenCoinDrop)
+        {
+            chickyProps.timeSinceCoinDrop = 0.0f;
+
+            foreach (KeyValuePair<GameObject, bool> coin in levelController.levelCoins)
+            {
+                if (coin.Value == true)
+                {
+                    activeCoin = coin.Key;
+                    levelController.levelCoins[activeCoin] = false;
+
+                    activeCoin.transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
+                    activeCoin.SetActive(true);
+                    break;
+                }
+            }
+        }
+        else
+        {
+            chickyProps.timeSinceCoinDrop += Time.deltaTime;
+        }
+    }
+
+    public void CheckCoinPickUp()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); //A vector of the player's touching position from the screen position into the world position.
+            touchPosition.y = 0.0f;
+
+            foreach (KeyValuePair<GameObject, bool> coin in levelController.levelCoins)
+            {
+                if (coin.Value == false)
+                {
+                    activeCoin = coin.Key;
+
+                    if (((touchPosition.x > (activeCoin.transform.position.x - 0.5f)) && (touchPosition.x < (activeCoin.transform.position.x + 0.5f)))
+                         && ((touchPosition.z > (activeCoin.transform.position.z - 0.5f)) && (touchPosition.z < (activeCoin.transform.position.z + 0.5f))))
+                    {
+                        coinDropAmount = constProps.maxCoinDropAmount;
+                        Debug.Log(coinDropAmount);
+
+                        if (chickyProps.cold || chickyProps.hot) { coinDropAmount--; }
+                        if (chickyProps.hungry) { coinDropAmount--; }
+                        if (chickyProps.lonely) { coinDropAmount--; }
+                        if (chickyProps.sleepy) { coinDropAmount--; }
+
+                        levelController.DeactivateObject(activeCoin, levelController.levelCoins);
+                        levelController.finances.AddGold(coinDropAmount);
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

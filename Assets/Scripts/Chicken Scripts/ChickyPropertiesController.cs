@@ -6,6 +6,9 @@ public class ChickyPropertiesController : MonoBehaviour
 {
     public struct ConstProps
     {
+        public float timeBetweenCoinDrop;
+        public int maxCoinDropAmount;
+
         public Vector3 eggColliderCentre;
         public float eggColliderRadius;
         public Vector3 chickyColliderCentre;
@@ -57,6 +60,7 @@ public class ChickyPropertiesController : MonoBehaviour
         public float wanderTimer;  //Amount of time the chicken has spent wandering since the last direction change.
         public float thrownTimer;              //How long has passed in seconds since the player stopped touching the chicken.
         public bool isBeingHeld;        //Has chicken been clicked/touched. (Global so it can remain true until touch ends).
+        public float timeSinceCoinDrop;
 
         public bool inNest;
         public bool inHutch;
@@ -69,12 +73,15 @@ public class ChickyPropertiesController : MonoBehaviour
 
     private void Awake()
     {
+        controllerProps.timeBetweenCoinDrop = 5.0f;
+        controllerProps.maxCoinDropAmount = 5;
+
         controllerProps.eggColliderCentre = new Vector3(0.0f, 0.1f, 0.0f);
         controllerProps.chickyColliderCentre = new Vector3(0.0f, -0.15f, 0.0f);
         controllerProps.eggColliderRadius = 0.45f;
         controllerProps.chickyColliderRadius = 1.5f;
 
-        controllerProps.timeToStayEgg = 5.0f;
+        controllerProps.timeToStayEgg = 10.0f;
         controllerProps.seedFeedAmount = 10.0f;
 
         controllerProps.eggColdLimit = 23.0f;

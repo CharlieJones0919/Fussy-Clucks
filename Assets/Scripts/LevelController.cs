@@ -14,16 +14,19 @@ public class LevelController : MonoBehaviour
 
     public Dictionary<GameObject, bool> levelChickens = new Dictionary<GameObject, bool>();
     public Dictionary<GameObject, bool> levelSeed = new Dictionary<GameObject, bool>();
+    public Dictionary<GameObject, bool> levelCoins = new Dictionary<GameObject, bool>();
     public Dictionary<GameObject, bool> levelNests = new Dictionary<GameObject, bool>();
     public Dictionary<GameObject, bool> levelHutches = new Dictionary<GameObject, bool>();
 
     public int chickyPoolSize;
     public int seedPoolSize;
+    public int coinPoolSize;
     public int nestPoolSize;
     public int hutchPoolSize;
 
     public GameObject chickyPrefab;
     public GameObject seedPrefab;
+    public GameObject coinPrefab;
     public GameObject nestPrefab;
     public GameObject hutchPrefab;
 
@@ -53,11 +56,13 @@ public class LevelController : MonoBehaviour
 
         chickyPoolSize = sceneNum * 5;
         seedPoolSize = chickyPoolSize * 2;
+        coinPoolSize = chickyPoolSize * 5;
         nestPoolSize = sceneNum * 3;
         hutchPoolSize = sceneNum * 2;
 
         LoadPrefabPool(chickyPrefab, chickyPoolSize, levelChickens);
         LoadPrefabPool(seedPrefab, seedPoolSize, levelSeed);
+        LoadPrefabPool(coinPrefab, coinPoolSize, levelCoins);
         LoadPrefabPool(nestPrefab, nestPoolSize, levelNests);
         LoadPrefabPool(hutchPrefab, hutchPoolSize, levelHutches);
 

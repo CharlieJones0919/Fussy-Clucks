@@ -34,13 +34,16 @@ public class PickedUpState : ChuckBaseState
             thisChuck.PickedUp();
             return null;
         }
-        else if (thisChuck.IsEggStill())
-        {
-            return typeof(EggState);
-        }
         else
         {
-            return typeof(ThrownState);
+            if (thisChuck.eggProps.isEgg)
+            {
+                return typeof(EggState);
+            }
+            else
+            {
+                return typeof(ThrownState);
+            }
         }
     }
 }

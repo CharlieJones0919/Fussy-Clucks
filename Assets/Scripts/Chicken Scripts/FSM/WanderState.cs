@@ -35,15 +35,22 @@ public class WanderState : ChuckBaseState
         }
         else if (thisChuck.chickyProps.inHutch || thisChuck.chickyProps.inNest || thisChuck.chickyProps.sleepy)
         {
+            thisChuck.CheckCoinPickUp();
             return null;
         }
         else if (thisChuck.chickyProps.hungry && thisChuck.SeedAvailable())
         {
+            thisChuck.CheckCoinDrop();
+            thisChuck.CheckCoinPickUp();
+
             thisChuck.GoToSeed();
             return null;
         }
         else
         {
+            thisChuck.CheckCoinDrop();
+            thisChuck.CheckCoinPickUp();
+
             thisChuck.Wandering();
             return null;
         }

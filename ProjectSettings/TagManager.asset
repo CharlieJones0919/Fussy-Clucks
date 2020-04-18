@@ -10,6 +10,7 @@ TagManager:
   - Nest
   - InsideHutch
   - Seed
+  - Coins
   layers:
   - Default
   - TransparentFX
@@ -24,8 +25,8 @@ TagManager:
   - Hutch
   - Ground
   - Nest
-  - Seed
   - InsideHutch
+  - Coins and Seed
   - 
   - 
   - 
