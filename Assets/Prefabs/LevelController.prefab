@@ -57,16 +57,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10d361c3e1c639f4ea4306a4941bd50a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneNum: 0
   beginningOfGame: 0
-  seedAvailable: 0
+  numOfTips: 0
+  tutorialCounter: 0
+  tutorialSteps: []
   finances: {fileID: 0}
+  uiOutput: {fileID: 0}
+  seedAvailable: 0
   chickyPoolSize: 0
   seedPoolSize: 0
+  coinPoolSize: 0
   nestPoolSize: 0
   hutchPoolSize: 0
   chickyPrefab: {fileID: 6358850348320953858, guid: a4e1c30442b3e6d4fb47d76e470310e6,
     type: 3}
   seedPrefab: {fileID: 7100262064301535167, guid: 1aade7bfb3f469f40bc313acdf4446cb,
+    type: 3}
+  coinPrefab: {fileID: 5875784534711006783, guid: a04a02eede23dd34f9c2fbbf2ff7b96f,
     type: 3}
   nestPrefab: {fileID: 3592344293565025338, guid: df682b9eb689b62439685e85b879ab6f,
     type: 3}
@@ -95,4 +103,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moneyTextbox: {fileID: 0}
-  gold: 0
+  gold: 35

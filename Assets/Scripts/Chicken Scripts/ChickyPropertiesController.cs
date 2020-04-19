@@ -70,18 +70,18 @@ public class ChickyPropertiesController : MonoBehaviour
         public bool sleepy;
     };
 
-    private void Awake()
+    private void OnEnable()
     {
         controllerProps.timeBetweenCoinDrop = 5.0f;
         controllerProps.maxCoinDropAmount = 5;
 
         controllerProps.eggColliderCentre = new Vector3(0.0f, 0.1f, 0.0f);
         controllerProps.chickyColliderCentre = new Vector3(0.0f, -0.15f, 0.0f);
-        controllerProps.eggColliderRadius = 0.45f;
+        controllerProps.eggColliderRadius = 0.75f;
         controllerProps.chickyColliderRadius = 1.5f;
 
-        controllerProps.timeToStayEgg = 30.0f;
-        controllerProps.seedFeedAmount = 20.0f;
+        controllerProps.timeToStayEgg = 15.0f;
+        controllerProps.seedFeedAmount = 30.0f;
 
         controllerProps.eggColdLimit = 23.0f;
         controllerProps.chuckColdLimit = 8.0f;
@@ -93,14 +93,14 @@ public class ChickyPropertiesController : MonoBehaviour
         controllerProps.eggOverheatDeathTemp = 49.0f;
         controllerProps.chuckOverheatDeathTemp = 45.0f;
 
-        controllerProps.speed = 10.0f;
+        controllerProps.speed = 30.0f;
         controllerProps.maxVel = 20.0f;
 
         controllerProps.wanderTimeLimit = 2.5f;
         controllerProps.fenceKnockback = 5.0f;
 
-        controllerProps.pickUpHeight = 2.0f;
-        controllerProps.fingerFollowSpeed = 300.0f;
+        controllerProps.pickUpHeight = 3.0f;
+        controllerProps.fingerFollowSpeed = 500.0f;
         controllerProps.thrownTime = 1.0f;
     }
 

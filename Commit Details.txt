@@ -81,3 +81,12 @@ Commit 12 [18/04/20]:
 - Implemented naming of chickens.
 - Ensured only 1 chicken can be put in a nest at once.
 - Created icons for UI output which are triggered by stat checks.
+
+Commit 13 [19/04/20]:
+- Implemented a tutorial and non-tutorial tips.
+- Started implementing a fail screen/conditions and the loading of a new level.
+
+Commit 14 [19/04/20]:
+- Made some adjustments to hitboxes as they were too small for touch controls.
+- Increased font sizes.
+- Implemented failure, winning, and 3 automatic levels.

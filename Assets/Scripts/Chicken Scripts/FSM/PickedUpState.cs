@@ -42,7 +42,7 @@ public class PickedUpState : ChuckBaseState
             }
             else
             {
-                return typeof(ThrownState);
+                return typeof(WanderState);
             }
         }
     }

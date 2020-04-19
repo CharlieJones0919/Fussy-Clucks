@@ -21,7 +21,7 @@ public class FinanceController : MonoBehaviour
     private int counter;
 
     // Start is called before the first frame update
-    private void Start()
+    private void OnEnable()
     {
         itemList = new ItemForSale[numOfItems];
         counter = 0;
@@ -30,7 +30,7 @@ public class FinanceController : MonoBehaviour
 
         counter++;
         itemList[counter].itemName = "Roosir Egg";
-        itemList[counter].itemPrice = 15;
+        itemList[counter].itemPrice = 20;
 
         counter++;
         itemList[counter].itemName = "Egg Nest";
@@ -38,11 +38,11 @@ public class FinanceController : MonoBehaviour
 
         counter++;
         itemList[counter].itemName = "Hutch";
-        itemList[counter].itemPrice = 100;
+        itemList[counter].itemPrice = 60;
 
         counter++;
         itemList[counter].itemName = "Seed";
-        itemList[counter].itemPrice = 10;
+        itemList[counter].itemPrice = 12;
     }
 
     public int GetNumOfItems()
@@ -86,7 +86,7 @@ public class FinanceController : MonoBehaviour
 
     public void UpdateUI()
     {
-        moneyTextbox.text = (gold + "g");
+        moneyTextbox.text = (gold + "G");
         SetButtonAvailability();
     }
 

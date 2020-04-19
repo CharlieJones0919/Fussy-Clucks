@@ -11,7 +11,7 @@ public class GetButtonText : MonoBehaviour
     private Text buttonText;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
         buttonText = GetComponent<Text>();

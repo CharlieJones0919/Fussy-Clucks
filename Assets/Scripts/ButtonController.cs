@@ -13,6 +13,9 @@ public class ButtonController : MonoBehaviour
     public string typeName;
     public GameObject typeModel;
 
+    private Vector3 startingNestPos = new Vector3(-18.5f, 0.5f, -10.5f);
+    private Vector3 startingHutchPos = new Vector3(-18.5f, 3.5f, 10.0f);
+
     private GameObject activeObject;
     private Vector3 activePosition;
     private Vector3 setSeedPosition;
@@ -20,30 +23,24 @@ public class ButtonController : MonoBehaviour
     private Dictionary<Vector3, bool> nestSpawnPositions = new Dictionary<Vector3, bool>();
     private Dictionary<Vector3, bool> hutchSpawnPositions = new Dictionary<Vector3, bool>();
 
-    public void Start()
+    public void OnEnable()
     {
         levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
-        levelController.finances.moneyTextbox = GameObject.Find("MoneyOutput").GetComponent<Text>();
-
         thisButton = GetComponent<Button>();
         levelController.finances.buttonRefs.Add(thisButton, true);
-   
-        nestSpawnPositions.Add(new Vector3(-21.0f, 0.5f, -12.5f), true);
-        nestSpawnPositions.Add(new Vector3(-21.0f, 0.5f, -8.5f), true);
 
-        hutchSpawnPositions.Add(new Vector3(-18.5f, 3.5f, 10.0f), true);
-        hutchSpawnPositions.Add(new Vector3(-11.0f, 3.5f, 10.0f), true);
-
-        if (levelController.beginningOfGame)
+        for (int i = 0; i < levelController.nestPoolSize; i++)
         {
-            if (typeName != "Egg Nest")
-            {
-                thisButton.interactable = false;
-            }
+            nestSpawnPositions.Add(new Vector3(startingNestPos.x + (i * 5.0f), startingNestPos.y, startingNestPos.z), true);
         }
-        else
+        for (int i = 0; i < levelController.hutchPoolSize; i++)
         {
-            levelController.finances.UpdateUI();
+            hutchSpawnPositions.Add(new Vector3(startingHutchPos.x + (i * 9.25f), startingHutchPos.y, startingHutchPos.z), true);
+        }
+
+        if (typeName != "Egg Nest")
+        {
+            thisButton.interactable = false;
         }
     }
 
@@ -58,6 +55,7 @@ public class ButtonController : MonoBehaviour
 
                 activeObject.transform.position = new Vector3(Random.insideUnitCircle.x, 4.0f + Random.insideUnitCircle.y, Random.insideUnitCircle.y);
                 activeObject.GetComponent<Chuck>().SetType(typeName, typeModel);
+                activeObject.GetComponent<Chuck>().Initialize();
                 activeObject.SetActive(true);
 
                 levelController.uiOutput.whichChicky = activeObject;
@@ -65,15 +63,26 @@ public class ButtonController : MonoBehaviour
                 break;
             }
         }
+
+        if (levelController.tutorialSteps[2] != null)
+        {
+            levelController.uiOutput.DisplayTip(levelController.tutorialSteps[levelController.tutorialCounter]);
+            levelController.tutorialSteps[levelController.tutorialCounter] = null;
+            levelController.uiOutput.loopTips = true;
+        }
+
+        levelController.CheckLevelFailed();
     }
 
     public void ActivateNest()
     {
         ActivateSingle(levelController.levelNests, nestSpawnPositions);
 
-        if (levelController.beginningOfGame)
+        if (levelController.tutorialSteps[1] != null)
         {
-            levelController.beginningOfGame = false;
+            levelController.uiOutput.DisplayTip(levelController.tutorialSteps[levelController.tutorialCounter]);
+            levelController.tutorialSteps[levelController.tutorialCounter] = null;
+            levelController.tutorialCounter++;
         }
     }
 
@@ -127,6 +136,7 @@ public class ButtonController : MonoBehaviour
                         }
 
                         levelController.finances.SpendGold(levelController.finances.GetItemPrice(typeName));
+                        levelController.CheckLevelFailed();
                         break;
                     }
                 }
@@ -157,6 +167,7 @@ public class ButtonController : MonoBehaviour
                 }
 
                 levelController.finances.SpendGold(levelController.finances.GetItemPrice(typeName));
+                levelController.CheckLevelFailed();
                 break;
             }
         }

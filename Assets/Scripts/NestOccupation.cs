@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class NestOccupation : MonoBehaviour
 {
-    private GameObject chickyInNest;
+    public GameObject chickyInNest;
     public bool nestOccupied;
+    public GameObject outerNestWalls;
 
     // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
         nestOccupied = false;
+        outerNestWalls.SetActive(false);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
         if (collision.transform.tag == "Chuck")
         {
@@ -21,17 +23,19 @@ public class NestOccupation : MonoBehaviour
             {
                 chickyInNest = collision.gameObject;
                 nestOccupied = true;
+                outerNestWalls.SetActive(true);
             }
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider collision)
     {
         if (collision.transform.tag == "Chuck")
         {
             if (collision.gameObject == chickyInNest)
             {
                 nestOccupied = false;
+                outerNestWalls.SetActive(false);
             }
         }
     }

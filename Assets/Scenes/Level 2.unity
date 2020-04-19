@@ -188,12 +188,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1180887742865106252, guid: dd15cccd2c759d54c946c72918fbbe80,
-        type: 3}
-      propertyPath: hutchPrefab
-      value: 
-      objectReference: {fileID: 5439265149496641744, guid: 1769e285e58946f4eb0eeecb886e1e1a,
-        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd15cccd2c759d54c946c72918fbbe80, type: 3}
 --- !u!1 &2099278689

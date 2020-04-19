@@ -29,30 +29,37 @@ public class WanderState : ChuckBaseState
     {
         thisChuck.CheckStats();
 
-        if (thisChuck.BeenPickedUp())
+        if (thisChuck.eggProps.isEgg)
         {
-            return typeof(PickedUpState);
-        }
-        else if (thisChuck.chickyProps.inHutch || thisChuck.chickyProps.inNest || thisChuck.chickyProps.sleepy)
-        {
-            thisChuck.CheckCoinPickUp();
-            return null;
-        }
-        else if (thisChuck.chickyProps.hungry && thisChuck.SeedAvailable())
-        {
-            thisChuck.CheckCoinDrop();
-            thisChuck.CheckCoinPickUp();
-
-            thisChuck.GoToSeed();
-            return null;
+            return typeof(EggState);
         }
         else
         {
-            thisChuck.CheckCoinDrop();
-            thisChuck.CheckCoinPickUp();
+            if (thisChuck.BeenPickedUp())
+            {
+                return typeof(PickedUpState);
+            }
+            else if (thisChuck.chickyProps.inHutch || thisChuck.chickyProps.inNest || thisChuck.chickyProps.sleepy)
+            {
+                thisChuck.CheckCoinPickUp();
+                return null;
+            }
+            else if ((thisChuck.chickyProps.hunger < (100 - thisChuck.constProps.seedFeedAmount)) && thisChuck.SeedAvailable())
+            {
+                thisChuck.CheckCoinDrop();
+                thisChuck.CheckCoinPickUp();
 
-            thisChuck.Wandering();
-            return null;
+                thisChuck.GoToSeed();
+                return null;
+            }
+            else
+            {
+                thisChuck.CheckCoinDrop();
+                thisChuck.CheckCoinPickUp();
+
+                thisChuck.Wandering();
+                return null;
+            }
         }
     }
 }
