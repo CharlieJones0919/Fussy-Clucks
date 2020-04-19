@@ -28,6 +28,12 @@ public class Chuck : MonoBehaviour
     private void Awake()
     {
         InitializeStateMachine(); //Runs the InitalizeStateMachine() function as defined below.
+
+        rigidBody = GetComponent<Rigidbody>(); //Gets the rigidbody from the object this script is attached to.  
+        chuckCollider = GetComponent<SphereCollider>();
+        propertiesController = GameObject.Find("LevelController").GetComponent<ChickyPropertiesController>();
+        levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
+        constProps = propertiesController.GetConstProps();
     }
 
     //Adds all the behaviour states to the states dictionary and sets these to the state machine.
@@ -40,16 +46,12 @@ public class Chuck : MonoBehaviour
         GetComponent<ChuckStateMachine>().SetStates(states); //Passes the added states into the state machine's setting function.
     }
 
-    public void OnEnable()
+    public void Start()
     {
-        rigidBody = GetComponent<Rigidbody>(); //Gets the rigidbody from the object this script is attached to.  
-        chuckCollider = GetComponent<SphereCollider>();
-        propertiesController = GameObject.Find("LevelController").GetComponent<ChickyPropertiesController>();
-        levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
-        constProps = propertiesController.GetConstProps();
+
     }
 
-    public void Initialize()
+    public void OnEnable()
     {
         chuckCollider.center = constProps.eggColliderCentre;
         chuckCollider.radius = constProps.eggColliderRadius;
@@ -83,6 +85,9 @@ public class Chuck : MonoBehaviour
 
     public void SetType(string type, GameObject model)
     {
+        GameObject oldModelClone = currentModelClone;
+        Destroy(oldModelClone);
+
         currentModelClone = Instantiate(model, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
         currentModelClone.transform.parent = this.transform;
 

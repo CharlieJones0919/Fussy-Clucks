@@ -90,3 +90,9 @@ Commit 14 [19/04/20]:
 - Made some adjustments to hitboxes as they were too small for touch controls.
 - Increased font sizes.
 - Implemented failure, winning, and 3 automatic levels.
+
+Commit 15 [19/04/20]:
+- Some minor adjustments for optimization like having Initialize called OnEnable
+	so the Chuck script doesn't need to be retrieved by the ButtonControl
+	script twice.
+- Commented ButtonControl script.
