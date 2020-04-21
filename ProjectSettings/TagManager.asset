@@ -4,13 +4,14 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Chuck
   - Hutch
   - Fence
   - Nest
   - InsideHutch
   - Seed
   - Coins
+  - Chicky
+  - Roosir
   layers:
   - Default
   - TransparentFX

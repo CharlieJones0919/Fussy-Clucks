@@ -194,6 +194,36 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5439265149496641744, guid: 1769e285e58946f4eb0eeecb886e1e1a,
         type: 3}
+    - target: {fileID: 1180887742865106252, guid: dd15cccd2c759d54c946c72918fbbe80,
+        type: 3}
+      propertyPath: roosirPrefab
+      value: 
+      objectReference: {fileID: -927199367670048503, guid: df2fac4b5cc48044b97985749410e039,
+        type: 3}
+    - target: {fileID: 1180887742865106252, guid: dd15cccd2c759d54c946c72918fbbe80,
+        type: 3}
+      propertyPath: chickyPrefab
+      value: 
+      objectReference: {fileID: -927199367670048503, guid: 6e41a7f4e705e5d4f86ed2dea8586207,
+        type: 3}
+    - target: {fileID: 1180887742865106252, guid: dd15cccd2c759d54c946c72918fbbe80,
+        type: 3}
+      propertyPath: roosirEggPrefab
+      value: 
+      objectReference: {fileID: -927199367670048503, guid: 364a5066da734904aab166d6e75e545e,
+        type: 3}
+    - target: {fileID: 1180887742865106252, guid: dd15cccd2c759d54c946c72918fbbe80,
+        type: 3}
+      propertyPath: chickyEggPrefab
+      value: 
+      objectReference: {fileID: -927199367670048503, guid: 122fb77a1f19a0c4e9e47cb6dde08f8d,
+        type: 3}
+    - target: {fileID: 1180887742865106252, guid: dd15cccd2c759d54c946c72918fbbe80,
+        type: 3}
+      propertyPath: chuckPrefab
+      value: 
+      objectReference: {fileID: 6358850348320953858, guid: a4e1c30442b3e6d4fb47d76e470310e6,
+        type: 3}
     m_RemovedComponents:
     - {fileID: 1180887742865106250, guid: dd15cccd2c759d54c946c72918fbbe80, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: dd15cccd2c759d54c946c72918fbbe80, type: 3}

@@ -12,9 +12,9 @@ public class Chuck : MonoBehaviour
     public ChickyPropertiesController.EggProps eggProps;                //For holding this object instance's egg properties data.
     public ChickyPropertiesController.ChickyVariableProps chickyProps;  //For holding this object instance's chicken properties data.
 
-    private GameObject currentModelClone;                               //Stores a reference to the clone of a model prefab which is instantiated when this object is activated depending on the type of chuck activated.
-    public GameObject chickyModel;                                      //Stores a reference to the Chicky model this object's model should be replaced with depending on its specified type when activated.
-    public GameObject roosirModel;                                      //Stores a reference to the Roosir model this object's model should be replaced with depending on its specified type when activated.
+    //Stores references to clones of the model prefabs which are instantiated when this object is instantiated depending on the type specifed.
+    public GameObject eggModel;                             
+    public GameObject chuckModel;                                    
 
     public Rigidbody rigidBody;             //This chicken's rigidbody component.
     public SphereCollider chuckCollider;    //This chicken's collider component.
@@ -45,6 +45,13 @@ public class Chuck : MonoBehaviour
     //Everytime the object is activated from its object pool, set its variable values to these default values.
     public void OnEnable()
     {
+        //Activate the egg and deactivate the adult model on activation if they've been assigned.
+        if (eggModel != null)
+        {
+            eggModel.SetActive(true);
+            chuckModel.SetActive(false);
+        }
+
         currentTouchRadius = constPropsRef.eggTouchRadius;          
         chuckCollider.center = constPropsRef.eggColliderCentre;
         chuckCollider.radius = constPropsRef.chickyColliderRadius;
@@ -86,7 +93,7 @@ public class Chuck : MonoBehaviour
             chickyProps.wanderTimer = constPropsRef.wanderTimeLimit;
         }
 
-        if (collider.gameObject.tag == "Chuck") //Increase the chicken's attention when it collides with another chicken;
+        if ((collider.gameObject.tag == "Chicky") || (collider.gameObject.tag == "Roosir")) //Increase the chicken's attention when it collides with another chicken;
         {
             if (chickyProps.attention < 100)
             {
@@ -147,16 +154,14 @@ public class Chuck : MonoBehaviour
         }
     }
 
-    //Called when the egg buttons are pressed and when in the Hatch() function. Sets the chicken's type and instantiates a copy of the specified model prefab  which is made a child to this object.
-    public void SetType(string type, GameObject model)
+    //Called when the object is loaded/instantiated. Sets the chicken's type and instantiates a copy of the specified model prefabs which are made children to this object.
+    public void SetType(string type, GameObject thisTypeEgg, GameObject thisTypeChuck)
     {
-        //Deletes the previous model object (egg model) by making a reference to it and deleting the reference.
-        GameObject oldModelClone = currentModelClone;
-        Destroy(oldModelClone);
+        chickyProps.type = type;    //Sets the type of the object. (Chicky Egg or Roosir Egg).
+        transform.tag = chickyProps.type.Replace(" Egg", "");
 
-        currentModelClone = Instantiate(model, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity); //Instantiates a clone of the model specified in the parameter.
-        currentModelClone.transform.parent = transform;     //Sets the new object as a child to this one.
-        chickyProps.type = type;    //Sets the type of the object. (Chicky Egg, Roosir Egg, Chicky or Roosir).
+        eggModel = thisTypeEgg;      //Sets reference to new egg model instance.
+        chuckModel = thisTypeChuck;  //Sets reference to new adult chicken model instance.
     }
 
     //Function called on update during the WanderState.
@@ -243,19 +248,10 @@ public class Chuck : MonoBehaviour
         currentTouchRadius = constPropsRef.chickyTouchRadius;
         chuckCollider.center = constPropsRef.chickyColliderCentre;
 
-        //Depending on what type (Roosir/Chicky) the object was defined as on activation, set the type to the adult form of that type with the corresponding model.
-        switch (chickyProps.type)
-        {
-            case ("Chicky Egg"):
-                SetType("Chicky", chickyModel);
-                break;
-            case ("Roosir Egg"):
-                SetType("Roosir", roosirModel);
-                break;
-            default:
-                Debug.Log("Unrecognised Chuck Type");
-                break;
-        }
+        //Depending on what type (Roosir/Chicky) the object was defined as on activation, set the type to the adult form of that type and activate its adult model.
+        chickyProps.type = chickyProps.type.Replace(" Egg", "");
+        eggModel.SetActive(false);
+        chuckModel.SetActive(true);
     }
 
     //Calls all the functions which increment/decrement the values of the chicken's stats and check the conditions for if any of their boolean properties are true/false (e.g. cold, sleepy, etc). In these condition checks, some of them also check for if the values should deactivate the object.
@@ -477,12 +473,9 @@ public class Chuck : MonoBehaviour
         }
     }
 
-    //When called, destroy the model attached to this chicken instance, then deactivate this object from the pool, and display the reason it died as passed into this function into the tip textbox.
+    //When called, deactivate this object from the pool, and display the reason it died as passed into this function into the tip textbox.
     private void KillChuck(string deathMessage)
     {
-        GameObject oldModelClone = currentModelClone;
-        Destroy(oldModelClone);
-
         levelController.DeactivateObject(transform.gameObject, levelController.levelChickens, deathMessage);
     }
 }

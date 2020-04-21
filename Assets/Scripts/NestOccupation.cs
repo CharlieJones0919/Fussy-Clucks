@@ -14,18 +14,18 @@ public class NestOccupation : MonoBehaviour
     }
 
     //When an object enters the nest's trigger collider (the "InsideNest" collider without physics), and it's a chicken, the outer collider walls are set to active so other chickens can't be put into it while it's occupied.
-    private void OnTriggerEnter(Collider collision)
+    private void OnTriggerEnter(Collider collider)
     {
-        if (collision.transform.tag == "Chuck")
+        if ((collider.gameObject.tag == "Chicky") || (collider.gameObject.tag == "Roosir"))
         {
             outerNestWalls.SetActive(true);
         }
     }
 
     //When the chicken exits the "InsideNest" trigger collider (as it would be when the chicken is picked up as the pickup height would remove it from the collider), then deactivate the outerwall colliders so the chicken can be removed.
-    private void OnTriggerExit(Collider collision)
+    private void OnTriggerExit(Collider collider)
     {
-        if (collision.transform.tag == "Chuck")
+        if ((collider.gameObject.tag == "Chicky") || (collider.gameObject.tag == "Roosir"))
         {
             outerNestWalls.SetActive(false);
         }

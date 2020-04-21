@@ -60,31 +60,34 @@ public class ButtonController : MonoBehaviour
             if (chicken.Value == true)
             {
                 activeObject = chicken.Key; //Sets the activeObject object to be a reference to the unactivated chicky prefab clone so it can be modified. 
-                levelController.levelChickens[activeObject] = false;    //Set the object to false to indicate the object is now activated from the pool and in play.
 
-                activeObject.transform.position = new Vector3(Random.insideUnitCircle.x * 3, 4.0f + Random.insideUnitCircle.y, Random.insideUnitCircle.y * 3);  //Move its position to a random point in the centre of the map.
-                activeObject.GetComponent<Chuck>().SetType(typeName, typeModel);    //Get its script component to set its type (Roosir or Chicky) and thusly which egg model it should instantiate as its model.
-                activeObject.SetActive(true);   //Activate the game object.
-
-                levelController.uiOutput.whichChicky = activeObject;    //Sets the UI's object reference to this newly activated chicken so it'll output its property values.
-                levelController.finances.SpendGold(levelController.finances.GetItemPrice(typeName));    //Get the price of the item and subtract it from the gold value.
-
-                itemActivated = true;   //Item has been found as inactive in the pool and has been activated.
-
-                //Once the first chicken has been purchased, start looping the tips from the list.
-                if (!levelController.uiOutput.loopTips)
+                if ((activeObject.tag + " Egg") == (typeName))  //Object in list must be the same type of the button type.
                 {
-                    levelController.uiOutput.tipTimer = levelController.uiOutput.timeToStayOnTip;
-                    levelController.uiOutput.loopTips = true;
+                    levelController.levelChickens[activeObject] = false;    //Set the object to false to indicate the object is now activated from the pool and in play.
+
+                    activeObject.transform.position = new Vector3(Random.insideUnitCircle.x * 3, 4.0f + Random.insideUnitCircle.y, Random.insideUnitCircle.y * 3);  //Move its position to a random point in the centre of the map.
+                    activeObject.SetActive(true);   //Activate the game object.
+
+                    levelController.uiOutput.whichChicky = activeObject;    //Sets the UI's object reference to this newly activated chicken so it'll output its property values.
+                    levelController.finances.SpendGold(levelController.finances.GetItemPrice(typeName));    //Get the price of the item and subtract it from the gold value.
+
+                    itemActivated = true;   //Item has been found as inactive in the pool and has been activated.
+
+                    //Once the first chicken has been purchased, start looping the tips from the list.
+                    if (!levelController.uiOutput.loopTips)
+                    {
+                        levelController.uiOutput.tipTimer = levelController.uiOutput.timeToStayOnTip;
+                        levelController.uiOutput.loopTips = true;
+                    }
+                    break;  //Once a non-active chicken has been activated, break the loop through the pool list doesn't need to be continued.
                 }
-                break;  //Once a non-active chicken has been activated, break the loop through the pool list doesn't need to be continued.
             }
         }
 
         //If no item was activated from the pool as there were none left, set the timer left to display the current tip as nearly zero, and display the following message.
         if (!itemActivated)
         {
-            levelController.uiOutput.DisplayTip("You've got the maximum number of livestock right now.");
+            levelController.uiOutput.DisplayTip("You've got the maximum number of that livestock right now.");
             levelController.uiOutput.tipTimer = 6.0f;
         }
     }

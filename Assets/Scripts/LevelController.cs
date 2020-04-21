@@ -45,7 +45,11 @@ public class LevelController : MonoBehaviour
     public GameObject fencePrefab;
     public GameObject groundPrefab;
     //Multiple Instance Gameplay Prefabs:
+    public GameObject chuckPrefab;      //The script, collider, rigidbody and FSM part of the chickens.
+    public GameObject chickyEggPrefab;
     public GameObject chickyPrefab;
+    public GameObject roosirEggPrefab;
+    public GameObject roosirPrefab;
     public GameObject seedPrefab;
     public GameObject coinPrefab;
     public GameObject nestPrefab;
@@ -98,7 +102,7 @@ public class LevelController : MonoBehaviour
         tutorialSteps[tutorialCounter] = "TIP: Don't put EGGs in your HUTCH. You can't get them out.";
 
         //Specifiying the size of the object pools. (How many clones of the appriopriate prefab should be instantiated and added to its object pool list). Dependant on the level/scene number.
-        chickyPoolSize = sceneNum * 6;
+        chickyPoolSize = sceneNum * 8;
         seedPoolSize = chickyPoolSize * 3;
         coinPoolSize = chickyPoolSize * 10;
 
@@ -109,11 +113,31 @@ public class LevelController : MonoBehaviour
         LoadPrefabPool(fencePrefab);
         LoadPrefabPool(groundPrefab);
         //Instantiating each of the multiple instance prefab clones. Parameters specify which prefab they should be clones of, how many clones should be instantiated, and which object pool list the clone object should be added to.
-        LoadPrefabPool(chickyPrefab, chickyPoolSize, levelChickens);
+        //Make the pool half roosirs, and half chickys.
+        LoadPrefabPool(chuckPrefab, (chickyPoolSize/2), "Roosir Egg", roosirEggPrefab, roosirPrefab);  
+        LoadPrefabPool(chuckPrefab, (chickyPoolSize/2), "Chicky Egg", chickyEggPrefab, chickyPrefab);
         LoadPrefabPool(seedPrefab, seedPoolSize, levelSeed);
         LoadPrefabPool(coinPrefab, coinPoolSize, levelCoins);
         LoadPrefabPool(nestPrefab, nestPoolSize, levelNests);
         LoadPrefabPool(hutchPrefab, hutchPoolSize, levelHutches);
+    }
+
+    //Used to instantiate and add to the object pool list all of the chicken clones, and sets which type they are while assigning their model's base prefabs.
+    private void LoadPrefabPool(GameObject targetPrefab, int poolSize, string eggType, GameObject typeEggModel, GameObject typeChuckModel)
+    {
+        for (int i = 0; i < poolSize; i++)
+        {
+            GameObject prefabClone = (GameObject)Instantiate(targetPrefab, inactivePosition, targetPrefab.transform.rotation); //Their position is initially set to the "inactivePosition" under the map, but maintain their prefab's specified rotation.
+
+            GameObject newEggModel = Instantiate(typeEggModel, targetPrefab.transform.position, Quaternion.identity);          //Instantiates a clone of the egg model specified in the parameter.
+            newEggModel.transform.parent = prefabClone.transform;                                                              //Sets the new model object as a child to the chicken object.
+            GameObject newChuckModel = Instantiate(typeChuckModel, targetPrefab.transform.position, Quaternion.identity);      //Instantiates a clone of the adult model specified in the parameter.
+            newChuckModel.transform.parent = prefabClone.transform;                          //Sets the new model object as a child to the chicken object.
+            prefabClone.GetComponent<Chuck>().SetType(eggType, newEggModel, newChuckModel);  //Get its script component to set its type (Roosir or Chicky) and thusly which egg model it should instantiate as its model.
+
+            levelChickens.Add(prefabClone, true);  //Add the newly instantiated object to its parameter specified list. Its boolean is set to true by default meaning this is an object which isn't yet active and can thusly be activated.
+            prefabClone.SetActive(false);          //Initially set the object to inactive as these are objects that must be "purchased" (activated by their item button), before becoming active.
+        }
     }
 
     //Used to instantiate and add to the object pool list all of the multiple instance prefabs.
