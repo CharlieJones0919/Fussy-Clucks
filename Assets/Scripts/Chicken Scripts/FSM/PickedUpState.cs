@@ -6,8 +6,10 @@ using UnityEngine;
 
 public class PickedUpState : ChuckBaseState
 {
+    //Reference to the object's Chuck script.
     private Chuck thisChuck;
 
+    //Called in the Chuck script to set this state's reference to itself.
     public PickedUpState(Chuck thisChuck)
     {
         this.thisChuck = thisChuck;
@@ -15,26 +17,24 @@ public class PickedUpState : ChuckBaseState
 
     public override Type StateEnter()
     {
-        Debug.Log("Entered PickedUpState");
         return null;
     }
 
     public override Type StateExit()
     {
-        Debug.Log("Exited PickedUpState");
         return null;
     }
 
     public override Type StateUpdate()
     {
-        thisChuck.CheckStats();
+        thisChuck.CheckStats(); //Check the chicken/egg's current stats.
 
-        if (thisChuck.BeenPickedUp())
+        if (thisChuck.BeenPickedUp()) //If the player's finger is still on the chicken, call PickedUp() which moves it towards the finger's current position in worldspace until they lift their finger.
         {
             thisChuck.PickedUp();
             return null;
         }
-        else
+        else    //If this state is entered or the object is dropped but the object is currently an egg, swap to EggState. Otherwise, swap back to WanderState.
         {
             if (thisChuck.eggProps.isEgg)
             {

@@ -96,3 +96,12 @@ Commit 15 [19/04/20]:
 	so the Chuck script doesn't need to be retrieved by the ButtonControl
 	script twice.
 - Commented ButtonControl script.
+
+Commit 16 [21/04/20]:
+- Some collider/pickup edits, to make it harder to pick up mutiple eggs.
+- Moved CoinPickUp to a new update function in UIController so it doesn't stop when
+	there aren't any chickens.
+- Made lists for all coin drop values and seed activation positions.
+- Minor UI visual changes.
+- Made the level change occur within the 1 scene.
+- Other major edits.

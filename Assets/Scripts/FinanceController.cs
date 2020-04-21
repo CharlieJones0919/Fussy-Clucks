@@ -3,29 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Responsible for updating the value of the gold, the item's prices, and item buttons' interactivity depending of if the player has enough gold to buy the item. 
 public class FinanceController : MonoBehaviour
 {
-    public Dictionary<Button, bool> buttonRefs = new Dictionary<Button, bool>();
-    private Button currentButton;
-    public Text moneyTextbox;
-    public int gold;
+    public Dictionary<Button, bool> buttonRefs = new Dictionary<Button, bool>();    //A list of all the item buttons in the UI, so they can be made interactable depending on their price and how much gold is in the gold int.
+    private Button currentButton;   //Which button from the list operations should be applied to.
+    public Text moneyText;          //The text that the gold amount is outputted into in the UI.
+    public int gold;                //The player's gold. (Chickens coins which when picked up increase it, and it's decreased when an item is bought).
 
-    public struct ItemForSale
+    //Structure for the items sold so their name can be correlated to a price.
+    public struct ItemForSale       
     {
         public string itemName;
         public int itemPrice;
     };
-    public ItemForSale[] itemList;
+    public ItemForSale[] itemList;  //List of all the items sold.
 
-    private const int numOfItems = 5;
-    private int counter;
+    public const int numOfItems = 5;   //Current number of items sold.
+    private int counter;               //Used to iterate through the item list without having to maintain what number in the list the item is.
 
-    // Start is called before the first frame update
+    //Called on start when the script is first activated.
     private void OnEnable()
     {
-        itemList = new ItemForSale[numOfItems];
-        counter = 0;
-        itemList[counter].itemName = "Chicky Egg";
+        itemList = new ItemForSale[numOfItems];     //Sets the list size to the current number of items.
+        counter = 0;                                //Sets the counter to 0. (Unnecessary but good for readability).
+
+        //The following add the item names to the list and set them to a price. After the first, the counter is incremented to move into the next storage allocation in the list.
+        itemList[counter].itemName = "Chicky Egg";  
         itemList[counter].itemPrice = 5;
 
         counter++;
@@ -45,11 +49,7 @@ public class FinanceController : MonoBehaviour
         itemList[counter].itemPrice = 12;
     }
 
-    public int GetNumOfItems()
-    {
-        return numOfItems;
-    }
-
+    //Takes the parameter of an item name as a string, and then iterates through the list to find an item with the same name, to return that item's price..
     public int GetItemPrice(string item)
     {
         for(int i = 0; i < numOfItems; i++)
@@ -63,33 +63,28 @@ public class FinanceController : MonoBehaviour
         return 0;
     }
 
-    public bool CanAffordItem(string itemToCheck)
-    {
-        if (gold >= GetItemPrice(itemToCheck))
-        {
-            return true;
-        }
-        return false;
-    }
-
+    //Called whenever the player picks up one of the chicken's coin drops. Add the value of the coin drop as entered via the parameter to the gold amount and updates the moneyText value to reflect the gold's new value;
     public void AddGold(int amount)
     {
         gold += amount;
         UpdateUI();
     }
 
+    //Called when the player presses one of the buttons to buy an item if one is available. Subtracts the item's price from gold and updates the moneyText UI to reflect the new value.
     public void SpendGold(int amount)
     {
         gold -= amount;
         UpdateUI();
     }
 
+    //Update's the moneyText UI component to output the current value in the gold int, and sets all the item's button's interactivity based on the new gold value.
     public void UpdateUI()
     {
-        moneyTextbox.text = (gold + "G");
+        moneyText.text = (gold + "G");
         SetButtonAvailability();
     }
 
+    //For every item button, if the corresponding item's price is more than the value in the gold int, set the button as non-interactable so it the player can't buy/press it. Otherwise, make the button interactable.
     public void SetButtonAvailability()
     {
         counter = 0;
@@ -98,29 +93,13 @@ public class FinanceController : MonoBehaviour
         {
             currentButton = buttonRef.Key;
 
-            if ((itemList[counter].itemPrice > gold))
+            if (itemList[counter].itemPrice > gold)
             {
                 currentButton.interactable = false;
             }
             else
             {
                 currentButton.interactable = true;
-            }
-
-            counter++;
-        }
-    }
-
-    public void DisableButton(string buttonName)
-    {
-        counter = 0;
-
-        foreach (KeyValuePair<Button, bool> buttonRef in buttonRefs)
-        {
-            if ((itemList[counter].itemName == buttonName))
-            {
-                currentButton = buttonRef.Key;
-                currentButton.interactable = false;
             }
 
             counter++;
