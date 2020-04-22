@@ -191,10 +191,22 @@ public class Chuck : MonoBehaviour
             IsEggStill();
         }
 
-        rigidBody.velocity = Vector3.zero;        //Sets the chicken's velocity back to 0 so the only movement is the force towards the finger.
         Vector3 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Gets the position of the mouse/finger on the screen as a world co-ordinate.
         touchPos.y = constPropsRef.pickUpHeight;  //Redefines the y-axis of the touch position as the screen hasn't got a depth.
-        rigidBody.AddForce((touchPos - transform.position) * constPropsRef.fingerFollowSpeed); //Adds force to the chicken in the direction of the finger/mouse. (The difference between the touch position and its current position).
+
+        // Vector3 direction = new Vector3(touchPos, transform.position);
+        Vector3 direction = (touchPos - transform.position);
+
+        Ray ray = new Ray(transform.position, direction);
+        RaycastHit hit;
+        if (!Physics.Raycast(ray, out hit, direction.magnitude))
+        {
+            rigidBody.MovePosition(touchPos);
+        }
+        else
+        {
+            rigidBody.MovePosition(hit.point);
+        }
     }
 
     //Called every update while the chicken is in its PickedUpState. Checks if the mouse button or the player's finger is [still] down on the chicken. A.K.A. Is the chicken still being held. 
