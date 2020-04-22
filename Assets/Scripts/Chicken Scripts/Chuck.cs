@@ -387,10 +387,10 @@ public class Chuck : MonoBehaviour
 
     private void CheckRest()
     {
-        //If the chicken is in a hutch, increase the sleep value. If the chicken isn't in a hutch, decrease it at 50% speed.
+        //If the chicken is in a hutch, increase the rest value by time * 2. If the chicken isn't in a hutch, decrease it at 50% speed.
         if ((chickyProps.inHutch) && (chickyProps.rest < 100.0f))
         {
-            chickyProps.rest += Time.deltaTime;
+            chickyProps.rest += Time.deltaTime * 2.0f;
         }
         else if ((!chickyProps.inHutch) && (chickyProps.rest > 0.0f))
         {

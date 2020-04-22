@@ -76,16 +76,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelController: {fileID: 0}
-  chickyModel: {fileID: -927199367670048503, guid: 6e41a7f4e705e5d4f86ed2dea8586207,
-    type: 3}
-  roosirModel: {fileID: -927199367670048503, guid: df2fac4b5cc48044b97985749410e039,
-    type: 3}
+  eggModel: {fileID: 0}
+  chuckModel: {fileID: 0}
   rigidBody: {fileID: 3107133707639934729}
   chuckCollider: {fileID: 3107133707639934743}
-  currentColliderRadius: 0
+  currentTouchRadius: 0
   seedPosition: {x: 0, y: 0, z: 0}
   activeCoin: {fileID: 0}
-  coinDropAmount: 0
+  coinDropAssignedValue: 0
 --- !u!114 &3107133707639934742
 MonoBehaviour:
   m_ObjectHideFlags: 0

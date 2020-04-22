@@ -84,7 +84,7 @@ public class ChickyPropertiesController : MonoBehaviour
         controllerProps.maxCoinDropAmount = 5;
         controllerProps.seedFeedAmount = 30; //How much of a chicken's hunger a seed pile restores.
 
-        controllerProps.eggTouchRadius = 0.65f;
+        controllerProps.eggTouchRadius = 0.80f;
         controllerProps.chickyTouchRadius = 1.75f;
         controllerProps.chickyColliderRadius = 1.5f;
         controllerProps.eggColliderCentre = new Vector3(0.0f, 1.0f, 0.0f);
@@ -102,8 +102,8 @@ public class ChickyPropertiesController : MonoBehaviour
         controllerProps.chuckFreezeDeathTemp = 0.0f;
         controllerProps.chuckOverheatDeathTemp = 45.0f;
 
-        controllerProps.speed = 25.0f;
-        controllerProps.maxVel = 10.0f;
+        controllerProps.speed = 28.0f;
+        controllerProps.maxVel = 15.0f;
 
         controllerProps.wanderTimeLimit = 2.5f;
         controllerProps.fenceKnockback = 5.0f;
